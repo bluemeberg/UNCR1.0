@@ -25,6 +25,9 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import {Icon} from './src/components/Icon';
+
 type SectionProps = PropsWithChildren<{
   title: string;
 }>;
@@ -68,6 +71,7 @@ function App(): JSX.Element {
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
         backgroundColor={backgroundStyle.backgroundColor}
       />
+      <Icon name="arrow-back" />
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={backgroundStyle}>
