@@ -1,0 +1,40 @@
+export type MainFeedInfoSUB = {
+  id: number;
+  profileImage: string;
+  nickName: string;
+  agentID: number;
+  channelThumbnail: string;
+  channelTitle: string;
+  channelID: string;
+  feedComment: string;
+  feedVideoThumbnail: string;
+  feedVideoTotalWatchTime: number;
+  feedVideoTotalWatcher: number;
+  myDuration: number | null;
+  feedCommentNumber: number;
+  isLiked: boolean;
+  feedVideoId: string;
+  likeHistory: string[];
+};
+
+export type MainFeedInfo = {
+  boardID: number;
+  agentURI: string;
+  agentNickname: string;
+  agentID: number;
+  channelThumbnail: string;
+  channelTitle: string;
+  channelID: string;
+  boardContent: string;
+  totalDuration: number;
+  totalWatchers: number;
+  myDuration: number | null;
+  totalComments: number;
+  myLike: boolean;
+  videoID: string;
+  totalLikes: number;
+  boardTime: string;
+  boardTitle: string;
+  videoThumbnail: string | null;
+  index: number;
+};

@@ -1,0 +1,324 @@
+{
+  "kind": "youtube#videoListResponse",
+  "etag": "b8oZ4MsbgLs0yYLnTGifFWR-iNY",
+  "items": [
+    {
+      "kind": "youtube#video",
+      "etag": "0uJ4R3u5TN47o0EU8ngdOskH75A",
+      "id": "kX9wm5MhF6M",
+      "snippet": {
+        "publishedAt": "2022-11-13T14:07:25Z",
+        "channelId": "UCuL5X-l2j8EXsAPGq8QQAsg",
+        "title": "현우진 쌤 수능 응원 영상!!",
+        "description": "",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/kX9wm5MhF6M/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/kX9wm5MhF6M/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/kX9wm5MhF6M/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          },
+          "standard": {
+            "url": "https://i.ytimg.com/vi/kX9wm5MhF6M/sddefault.jpg",
+            "width": 640,
+            "height": 480
+          },
+          "maxres": {
+            "url": "https://i.ytimg.com/vi/kX9wm5MhF6M/maxresdefault.jpg",
+            "width": 1280,
+            "height": 720
+          }
+        },
+        "channelTitle": "ㅇㅇ",
+        "categoryId": "22",
+        "liveBroadcastContent": "none",
+        "localized": {
+          "title": "현우진 쌤 수능 응원 영상",
+          "description": ""
+        }
+      }
+    },
+    {
+      "kind": "youtube#video",
+      "etag": "hUxTw2euqKYtEM8AbzR-qDjV6a8",
+      "id": "CDBJVh4oFmg",
+      "snippet": {
+        "publishedAt": "2023-01-17T06:06:53Z",
+        "channelId": "UCIN5HpU8EhWUsBjIBztcQyQ",
+        "title": "극상위권 현우진쌤의 인생조언 | 극상위권으로 가는길 #Shorts",
+        "description": "인생 성공한 극상위권이 말해주는 극상위권으로 가는방법 \n주변의 기준을 높이세요!\n성공한 사람들은 문제점을 발견하고 해결하려고 합니다.\n기준낮은 사람을 기준으로 잡고 나는 잘한다하고 위안삼지 않아요.     \n\n\n\nOriginal Video: https://www.youtube.com/watch?v=REHWZP9FEEo&t=282s\nLicensed under Creative Commons : By Attribution 3.0 License \nhttp://creativecommons.org/licenses/by/3.0/\nE-mail : we_mate@naver.com\nFor any copyright concerns, partnership, any questions or concerns contact us at e-mail and will get back to you immediately.",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/CDBJVh4oFmg/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/CDBJVh4oFmg/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/CDBJVh4oFmg/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          },
+          "standard": {
+            "url": "https://i.ytimg.com/vi/CDBJVh4oFmg/sddefault.jpg",
+            "width": 640,
+            "height": 480
+          },
+          "maxres": {
+            "url": "https://i.ytimg.com/vi/CDBJVh4oFmg/maxresdefault.jpg",
+            "width": 1280,
+            "height": 720
+          }
+        },
+        "channelTitle": "나만알아",
+        "tags": [
+          "#shorts",
+          "갓생",
+          "실행력",
+          "직장인",
+          "성공습관",
+          "사고의전환",
+          "극상위권",
+          "수학의신",
+          "인생조언",
+          "최상위권극상위권",
+          "마인드",
+          "성공한사람들",
+          "성공한사람들마인드",
+          "성공멘탈",
+          "성공비밀",
+          "마인드차이",
+          "동기부여",
+          "현실적조언"
+        ],
+        "categoryId": "25",
+        "liveBroadcastContent": "none",
+        "localized": {
+          "title": "극상위권 현우진쌤의 인생조언 | 극상위권으로 가는길 #Shorts",
+          "description": "인생 성공한 극상위권이 말해주는 극상위권으로 가는방법 \n주변의 기준을 높이세요!\n성공한 사람들은 문제점을 발견하고 해결하려고 합니다.\n기준낮은 사람을 기준으로 잡고 나는 잘한다하고 위안삼지 않아요.     \n\n\n\nOriginal Video: https://www.youtube.com/watch?v=REHWZP9FEEo&t=282s\nLicensed under Creative Commons : By Attribution 3.0 License \nhttp://creativecommons.org/licenses/by/3.0/\nE-mail : we_mate@naver.com\nFor any copyright concerns, partnership, any questions or concerns contact us at e-mail and will get back to you immediately."
+        },
+        "defaultAudioLanguage": "zxx"
+      }
+    },
+    {
+      "kind": "youtube#video",
+      "etag": "hMCtjO8RvGQn7hBA46MKp0ELBEQ",
+      "id": "fdI6-dbkqkI",
+      "snippet": {
+        "publishedAt": "2021-05-02T12:42:39Z",
+        "channelId": "UChC-v97QSRidIg_kd4Jf_1A",
+        "title": "이게 바로 뉴욕 감성이라는 거야 🌆✈ [ 𝐅𝐥𝐲 𝐁𝐲 𝐌𝐢𝐝𝐧𝐢𝐠𝐡𝐭 𝐏𝐥𝐚𝐲𝐥𝐢𝐬𝐭 ]",
+        "description": "작년 3월에 올렸던 플라이 바이 미드나잇 플리를 드디어 다시 올립니다.\n\n그 당시 제 채널 구독자 200명.. 플리에 댓글 2개..최종 조회수 300나옴😭\n오늘도 조회수 300밖에 안 나오면 진짜 여러분 미워할 겁니다,,\n\n배경의 장소는 뉴욕 맨하탄입니다.\n원래 플라이 바이 미드나잇이 뉴욕 스테이튼 아일랜드 출신인데\n이 동네가 젤 뉴욕 같지 않은곳이라고,, 뭔가 감성적인 사진도 거의 없더라구요,,\n뭐,, 맨하탄이나 스테이튼 아일랜드나 같은 뉴욕이니까 이 사진을 사용해봤습니다.🤷🏻\u200d♂️🤣\n\n오늘은 정말 조회수 잘 나왔으면 좋겠습니다.🙏🏻\n노래듣고 편안한 일요일 밤 보내세요!🧡\n\n🗣 About Fly By Midnight\n\n플라이 바이 미드나잇(Fly By Midnight)은 뉴욕 스테이튼 아일랜드 출신의 레트로 팝 듀오입니다. \n멤버 저스틴 브릿(Bryte)과 저스틴 슬라븐(Slavo)은 2014년 스테이튼 아일랜드에서 만나 듀오를 결성하기로 했습니다.\n이들은 가수 겸 작곡가 찰리 푸스의 \"We Don`t Talk anymore\"의 커버 곡으로 잘 알려졌으며, 바이럴을 타고 유튜브에선 2,500만이 넘는 조회수를 기록하게 됐습니다.\n\n🗣  Fly By Midnight 유튜브 채널\n: https://www.youtube.com/user/talentamplified\n\n사진 출처 : https://www.instagram.com/p/CMFR8XanTtv/\nThank you, Adrian💜\n\n(✔ 영상 무단 도용 및 불펌 절대 금지입니다.적발 시 법적으로 조치를 취하겠습니다. 단, 저에게 허락받고 출처 남기시면 가능합니다.)\n\n#팝송플레이리스트\u200b\u200b\u200b\u200b\u200b#팝송추천\u200b\u200b\u200b\u200b#flybymidnight\u200b\u200b\u200b\u200b#뉴욕감성\u200b\u200b\u200b\u200b\u200b#뉴욕노래\u200b\u200b\u200b\u200b#newyork\u200b\u200b\u200b\u200b#드라이브팝송\u200b\u200b\u200b\u200b\u200b#드라이브노래\u200b\u200b\u200b\u200b\u200b#drive노래\u200b\u200b\u200b\u200b\u200b#운전할때노래\u200b#\u200b노을팝송#sunset감성#playlist추천#플레이리스트추천#flybymidnightplaylist",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/fdI6-dbkqkI/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/fdI6-dbkqkI/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/fdI6-dbkqkI/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          },
+          "standard": {
+            "url": "https://i.ytimg.com/vi/fdI6-dbkqkI/sddefault.jpg",
+            "width": 640,
+            "height": 480
+          },
+          "maxres": {
+            "url": "https://i.ytimg.com/vi/fdI6-dbkqkI/maxresdefault.jpg",
+            "width": 1280,
+            "height": 720
+          }
+        },
+        "channelTitle": "들어보송song",
+        "tags": [
+          "flybymidnight",
+          "팝송플레이리스트",
+          "뉴욕노래",
+          "뉴욕감성",
+          "팝송추천",
+          "노래추천",
+          "음악추천",
+          "팝송",
+          "pop",
+          "popmusic",
+          "드라이브팝송",
+          "drive팝송",
+          "운전노래",
+          "운전음악",
+          "운전할때듣기좋은음악",
+          "미국노래"
+        ],
+        "categoryId": "10",
+        "liveBroadcastContent": "none",
+        "localized": {
+          "title": "이게 바로 뉴욕 감성이라는 거야 🌆✈ [ 𝐅𝐥𝐲 𝐁𝐲 𝐌𝐢𝐝𝐧𝐢𝐠𝐡𝐭 𝐏𝐥𝐚𝐲𝐥𝐢𝐬𝐭 ]",
+          "description": "작년 3월에 올렸던 플라이 바이 미드나잇 플리를 드디어 다시 올립니다.\n\n그 당시 제 채널 구독자 200명.. 플리에 댓글 2개..최종 조회수 300나옴😭\n오늘도 조회수 300밖에 안 나오면 진짜 여러분 미워할 겁니다,,\n\n배경의 장소는 뉴욕 맨하탄입니다.\n원래 플라이 바이 미드나잇이 뉴욕 스테이튼 아일랜드 출신인데\n이 동네가 젤 뉴욕 같지 않은곳이라고,, 뭔가 감성적인 사진도 거의 없더라구요,,\n뭐,, 맨하탄이나 스테이튼 아일랜드나 같은 뉴욕이니까 이 사진을 사용해봤습니다.🤷🏻\u200d♂️🤣\n\n오늘은 정말 조회수 잘 나왔으면 좋겠습니다.🙏🏻\n노래듣고 편안한 일요일 밤 보내세요!🧡\n\n🗣 About Fly By Midnight\n\n플라이 바이 미드나잇(Fly By Midnight)은 뉴욕 스테이튼 아일랜드 출신의 레트로 팝 듀오입니다. \n멤버 저스틴 브릿(Bryte)과 저스틴 슬라븐(Slavo)은 2014년 스테이튼 아일랜드에서 만나 듀오를 결성하기로 했습니다.\n이들은 가수 겸 작곡가 찰리 푸스의 \"We Don`t Talk anymore\"의 커버 곡으로 잘 알려졌으며, 바이럴을 타고 유튜브에선 2,500만이 넘는 조회수를 기록하게 됐습니다.\n\n🗣  Fly By Midnight 유튜브 채널\n: https://www.youtube.com/user/talentamplified\n\n사진 출처 : https://www.instagram.com/p/CMFR8XanTtv/\nThank you, Adrian💜\n\n(✔ 영상 무단 도용 및 불펌 절대 금지입니다.적발 시 법적으로 조치를 취하겠습니다. 단, 저에게 허락받고 출처 남기시면 가능합니다.)\n\n#팝송플레이리스트\u200b\u200b\u200b\u200b\u200b#팝송추천\u200b\u200b\u200b\u200b#flybymidnight\u200b\u200b\u200b\u200b#뉴욕감성\u200b\u200b\u200b\u200b\u200b#뉴욕노래\u200b\u200b\u200b\u200b#newyork\u200b\u200b\u200b\u200b#드라이브팝송\u200b\u200b\u200b\u200b\u200b#드라이브노래\u200b\u200b\u200b\u200b\u200b#drive노래\u200b\u200b\u200b\u200b\u200b#운전할때노래\u200b#\u200b노을팝송#sunset감성#playlist추천#플레이리스트추천#flybymidnightplaylist"
+        }
+      }
+    },
+    {
+      "kind": "youtube#video",
+      "etag": "896orGVl3HXFtUzqSAHY1ZebuwI",
+      "id": "gH-ftLuQ588",
+      "snippet": {
+        "publishedAt": "2020-03-11T04:08:26Z",
+        "channelId": "UCxRnfrmJAkRLarzeBJETB5g",
+        "title": "#04.모바일 SNS UIUX디자인[Adobe XD]",
+        "description": "추천, 구독, 알림, 댓글은 큰 힘이 됩니다.\n채널에 멤버십 가입하여 디자인 원본파일을 받아보세요.\nhttps://han.gl/OBONg\n\n➤마디아 스타일가이드 : https://han.gl/ZmkOP\n➤캐릭터 유튜브 채널 : https://han.gl/9q5gi\n\n➤아래 재생목록에서 수백개의 디자인 & 디자인 팁을 배워가세요\n\n1. 포토샵 기초강의\nhttps://han.gl/DtcSI\n\n2. 일러스트레이터 기초강의\nhttps://han.gl/En3UZ\n\n3. 어도비XD 기초강의\nhttps://han.gl/jpu30\n\n4. 시청자 포트폴리오 컨펌\nhttps://han.gl/b6INc\n\n5. 웹 디자인UIUX\nhttps://han.gl/ZMgL9\n\n6. 모바일 디자인UIUX\nhttps://han.gl/KB5tU\n\n7. 아이콘 디자인\nhttps://han.gl/qcHlM\n\n8. 디자인 정보\nhttps://han.gl/BL9AW\n\n안녕하세요 디자이너 마디아입니다. \n현재 실무에서 쇼핑몰 UIUX 구축 디자이너로 활동하고 있으며 학생분들에게 조금이나마 도움이 될 수 있는 강의로 여러분들에게 다가가도록 하겠습니다.\n--------------------------------------------------------------------------\n► youtube channel:  https://bit.ly/2GJYUF1\n►단톡방 : https://open.kakao.com/o/gakaJCvb\n►mail : madia_designer@naver.com\n►cafe :  https://cafe.naver.com/madiadesigner\n--------------------------------------------------------------------------\n본 디자인은 다양한 해외 벤치마킹을 통해 고민없이 \n비쥬얼 적으로만 디자인 되었음을 알립니다.\n--------------------------------------------------------------------------\n#앱디자인 #UIUX #Adobe XD",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/gH-ftLuQ588/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/gH-ftLuQ588/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/gH-ftLuQ588/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          },
+          "standard": {
+            "url": "https://i.ytimg.com/vi/gH-ftLuQ588/sddefault.jpg",
+            "width": 640,
+            "height": 480
+          },
+          "maxres": {
+            "url": "https://i.ytimg.com/vi/gH-ftLuQ588/maxresdefault.jpg",
+            "width": 1280,
+            "height": 720
+          }
+        },
+        "channelTitle": "Madia Designer",
+        "tags": [
+          "Photoshop",
+          "Illustrator",
+          "XD",
+          "web design",
+          "UIUX design",
+          "app design",
+          "icon design",
+          "logo design",
+          "Graphics",
+          "font",
+          "Big Marvel",
+          "JflaMusic",
+          "ibighit",
+          "디바제시카",
+          "jyp",
+          "보겸TV",
+          "포토샵",
+          "일러스트",
+          "어도비xd",
+          "디자인",
+          "로고",
+          "UIUX",
+          "마디아",
+          "포트폴리오",
+          "아이콘",
+          "디자이너연봉",
+          "Portfolio",
+          "포토샵강의",
+          "일러스트강의",
+          "인하우스",
+          "에이전시",
+          "취업",
+          "웹디자인 포트폴리오",
+          "웹디자인 노트북",
+          "ux디자이너",
+          "모바일 ui 디자인",
+          "디자이너",
+          "typographics",
+          "배너디자인",
+          "그라디언트",
+          "웹디자인",
+          "앱디자인",
+          "모바일디자인",
+          "캘리그라피",
+          "컬러"
+        ],
+        "categoryId": "26",
+        "liveBroadcastContent": "none",
+        "defaultLanguage": "ko",
+        "localized": {
+          "title": "#04.모바일 SNS UIUX디자인[Adobe XD]",
+          "description": "추천, 구독, 알림, 댓글은 큰 힘이 됩니다.\n채널에 멤버십 가입하여 디자인 원본파일을 받아보세요.\nhttps://han.gl/OBONg\n\n➤마디아 스타일가이드 : https://han.gl/ZmkOP\n➤캐릭터 유튜브 채널 : https://han.gl/9q5gi\n\n➤아래 재생목록에서 수백개의 디자인 & 디자인 팁을 배워가세요\n\n1. 포토샵 기초강의\nhttps://han.gl/DtcSI\n\n2. 일러스트레이터 기초강의\nhttps://han.gl/En3UZ\n\n3. 어도비XD 기초강의\nhttps://han.gl/jpu30\n\n4. 시청자 포트폴리오 컨펌\nhttps://han.gl/b6INc\n\n5. 웹 디자인UIUX\nhttps://han.gl/ZMgL9\n\n6. 모바일 디자인UIUX\nhttps://han.gl/KB5tU\n\n7. 아이콘 디자인\nhttps://han.gl/qcHlM\n\n8. 디자인 정보\nhttps://han.gl/BL9AW\n\n안녕하세요 디자이너 마디아입니다. \n현재 실무에서 쇼핑몰 UIUX 구축 디자이너로 활동하고 있으며 학생분들에게 조금이나마 도움이 될 수 있는 강의로 여러분들에게 다가가도록 하겠습니다.\n--------------------------------------------------------------------------\n► youtube channel:  https://bit.ly/2GJYUF1\n►단톡방 : https://open.kakao.com/o/gakaJCvb\n►mail : madia_designer@naver.com\n►cafe :  https://cafe.naver.com/madiadesigner\n--------------------------------------------------------------------------\n본 디자인은 다양한 해외 벤치마킹을 통해 고민없이 \n비쥬얼 적으로만 디자인 되었음을 알립니다.\n--------------------------------------------------------------------------\n#앱디자인 #UIUX #Adobe XD"
+        },
+        "defaultAudioLanguage": "en-US"
+      }
+    },
+    {
+      "kind": "youtube#video",
+      "etag": "Es-zwMk6JasP_mky3FpIQoupkJc",
+      "id": "mrw0h_kNCiY",
+      "snippet": {
+        "publishedAt": "2022-10-11T11:00:35Z",
+        "channelId": "UCQJuKtqEzMby_bYPYtR1-Vw",
+        "title": "디자인의 관점으로 본 슬롯머신과 SNS의 공통점은? | UX디자인 전문가 윤재영 [해시태그 EP.01]",
+        "description": "🔥 해시태그 '디자인 트랩' 2편 이어 보기 : https://youtu.be/n402VaJVMjs\n\n삶을 반올림하는 지식의 우물, 해시태그 \n첫 번째 '해시태그'는 #디자인트랩 입니다. \n\n홍익대학교 시각디자인과 윤재영 교수의 설명으로 \n사용자를 유인하고 현혹하는 디자인, \n'디자인 트랩'을 알아보세요. \n\n---- \n\n#김영사\u200b 홈페이지 http://www.gimmyoung.com\n#김영사\u200b 블로그 https://blog.naver.com/gybook\n#김영사\u200b 인스타그램 https://www.instagram.com/gimmyoung\n#김영사\u200b 페이스북 https://www.facebook.com/gybooks\n#김영사\u200b 트위터 https://www.twitter.com/gy_books",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/mrw0h_kNCiY/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/mrw0h_kNCiY/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/mrw0h_kNCiY/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          },
+          "standard": {
+            "url": "https://i.ytimg.com/vi/mrw0h_kNCiY/sddefault.jpg",
+            "width": 640,
+            "height": 480
+          },
+          "maxres": {
+            "url": "https://i.ytimg.com/vi/mrw0h_kNCiY/maxresdefault.jpg",
+            "width": 1280,
+            "height": 720
+          }
+        },
+        "channelTitle": "작가생각",
+        "categoryId": "22",
+        "liveBroadcastContent": "none",
+        "localized": {
+          "title": "디자인의 관점으로 본 슬롯머신과 SNS의 공통점은? | UX디자인 전문가 윤재영 [해시태그 EP.01]",
+          "description": "🔥 해시태그 '디자인 트랩' 2편 이어 보기 : https://youtu.be/n402VaJVMjs\n\n삶을 반올림하는 지식의 우물, 해시태그 \n첫 번째 '해시태그'는 #디자인트랩 입니다. \n\n홍익대학교 시각디자인과 윤재영 교수의 설명으로 \n사용자를 유인하고 현혹하는 디자인, \n'디자인 트랩'을 알아보세요. \n\n---- \n\n#김영사\u200b 홈페이지 http://www.gimmyoung.com\n#김영사\u200b 블로그 https://blog.naver.com/gybook\n#김영사\u200b 인스타그램 https://www.instagram.com/gimmyoung\n#김영사\u200b 페이스북 https://www.facebook.com/gybooks\n#김영사\u200b 트위터 https://www.twitter.com/gy_books"
+        }
+      }
+    }
+  ],
+  "nextPageToken": "CAUQAA",
+  "pageInfo": {
+    "totalResults": 76,
+    "resultsPerPage": 5
+  }
+}

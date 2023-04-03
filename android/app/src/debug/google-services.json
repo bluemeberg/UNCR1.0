@@ -1,0 +1,63 @@
+{
+  "project_info": {
+    "project_number": "482024341954",
+    "firebase_url": "https://uncrcbt-default-rtdb.firebaseio.com",
+    "project_id": "uncrcbt",
+    "storage_bucket": "uncrcbt.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:482024341954:android:453a05c03a9a17d946565b",
+        "android_client_info": {
+          "package_name": "com.uncr_cbt"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "482024341954-g6pptug80vgib077qsnj5l8mp8p2aoe0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.uncr_cbt",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "482024341954-qnf0ulvbhrci64ta68778s599oub6f83.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.uncr_cbt",
+            "certificate_hash": "c012a780ce39d004128017054d36cb5fc44572c6"
+          }
+        },
+        {
+          "client_id": "482024341954-l0afc4nb14g92btcha9rqkdftja0cv8e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCwmtTaaUraevz1HD0icmwWFS0qzDktrSI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "482024341954-8uqo99rup1e39rblooekht7n7999viro.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "482024341954-9adnmefhv1sv4ak9d69se9fif4cuu8su.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.uncrcbt.debug"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
