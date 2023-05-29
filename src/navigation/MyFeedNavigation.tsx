@@ -6,7 +6,8 @@ import {
 } from '@react-navigation/native-stack';
 import React from 'react';
 import CreatePost from '../components/CreatePost';
-import MyFeedDetail from '../screens/account/MyFeedDetail';
+import EditAccountScreen from '../screens/account/EditAccountScreen';
+import MyFeedDetail from '../screens/account/MyFeedDetailScreen';
 import MyFeedScreen from '../screens/account/MyFeedScreen';
 
 export type TypeMyFeedNavigation = {
@@ -16,6 +17,8 @@ export type TypeMyFeedNavigation = {
     MyFeedData: [];
     index: number;
   };
+  Edit: undefined;
+  CreatePost3: undefined;
 };
 
 const Stack = createNativeStackNavigator();
@@ -36,8 +39,9 @@ export const MyFeedNavigation: React.FC = () => {
         component={MyFeedDetail}
         options={{presentation: 'transparentModal'}}
       />
+      <Stack.Screen name="Edit" component={EditAccountScreen} />
       <Stack.Screen
-        name="CreatePost2"
+        name="CreatePost3"
         component={CreatePost}
         options={{presentation: 'transparentModal'}}
       />

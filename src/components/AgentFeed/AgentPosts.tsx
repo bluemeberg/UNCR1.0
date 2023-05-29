@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {FlatList, Image, Text, useWindowDimensions, View} from 'react-native';
-import {Button} from '../../components/Button';
-import {Spacer} from '../../components/Spacer';
+import {Button} from '../Button';
+import {Spacer} from '../Spacer';
 import {useAgentFeedNavigation} from '../../navigation/AgentFeedNavigation';
 import {useMainRoute} from '../../navigation/MainFeedNavigation';
 import {
@@ -11,6 +11,7 @@ import {
 } from '../../utils/AxiosUtils';
 import {Color} from '../../utils/ColorStyle';
 import {Font} from '../../utils/FontStyle';
+import {useAgentInfo} from '../../selectors/agnetInfo';
 
 const AgentPosts: React.FC = ({}) => {
   const mainRoutes = useMainRoute<'AgentFeedNavigation'>();
@@ -20,15 +21,19 @@ const AgentPosts: React.FC = ({}) => {
   const navigation = useAgentFeedNavigation();
   //   console.log('tab view', mainRoutes);
   const onPressAgentFeedDetail = index => {
-    navigation.navigate('AgentFeedDetail', {
+    navigation.push('AgentFeedDetail', {
       AgentID: mainRoutes.params.AgentID,
       AgentFeedData: agentFeedData,
       index: index,
     });
   };
+  const agentInfo = useAgentInfo();
   async function getAgentFeeds() {
     const result = await createAxiosServerInstance().get('/mypage/get', {
-      params: {agentID: mainRoutes.params.AgentID},
+      params: {
+        agentID: mainRoutes.params.AgentID,
+        // myAgentID: agentInfo?.agentNumber,
+      },
     });
     result.data.boardVOS
       .sort((a: any, b: any) => a.boardID - b.boardID)
@@ -58,16 +63,22 @@ const AgentPosts: React.FC = ({}) => {
   }, []);
   console.log(agentFeedData);
   return (
-    <View style={{marginTop: 16}}>
+    <View
+      style={{
+        marginTop: 16,
+        flex: 1,
+        backgroundColor: 'white',
+        justifyContent: 'center',
+      }}>
       <FlatList
         data={agentFeedData}
         numColumns={2}
         columnWrapperStyle={{justifyContent: 'space-between'}}
-        ItemSeparatorComponent={() => <Spacer space={16} />}
+        ItemSeparatorComponent={() => <Spacer space={20} />}
         keyExtractor={item => item.boardID.toString()}
         renderItem={({item, index}) => {
           return (
-            <View style={{marginHorizontal: 8}}>
+            <View style={{marginHorizontal: 8, width: width / 2 - 16}}>
               <Button onPress={() => onPressAgentFeedDetail(index)}>
                 <Image
                   source={{uri: item.videoThumbnail}}
@@ -85,15 +96,40 @@ const AgentPosts: React.FC = ({}) => {
                   style={{width: 28, height: 28, borderRadius: 14}}
                 />
                 <Spacer horizontal space={8} />
-                <Text style={[Font.Footnote_14_R, {color: 'black'}]}>
+                <Text
+                  style={[
+                    Font.Footnote_14_R,
+                    {color: 'black', width: width / 2 - 32},
+                  ]}>
                   {item.channelTitle}
                 </Text>
               </View>
               <Spacer space={8} />
-              <Text style={[Color.Neutral60, Font.Body_14_R]}>
-                #Fun <Spacer horizontal space={4} />
-                #Must watch
-              </Text>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  flexWrap: 'wrap',
+                }}>
+                {item.hashtags.map(item => (
+                  <View style={{marginRight: 4}}>
+                    <Text
+                      style={[
+                        Color.Purple_Main,
+                        {
+                          fontFamily: 'System',
+                          fontSize: 14,
+                          fontStyle: 'normal',
+                          fontWeight: '400',
+                          lineHeight: 22,
+                          letterSpacing: 0.01,
+                        },
+                      ]}>
+                      #{item}
+                    </Text>
+                    <Spacer space={4} horizontal />
+                  </View>
+                ))}
+              </View>
             </View>
           );
         }}

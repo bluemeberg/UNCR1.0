@@ -1,37 +1,33 @@
 import React, {useEffect, useState} from 'react';
+import {Image, KeyboardAvoidingView} from 'react-native';
 import {
   FlatList,
-  Image,
   ImageBackground,
   Text,
   useWindowDimensions,
   View,
 } from 'react-native';
-import {useSelector} from 'react-redux';
-import {AgentAccountInfo} from '../../@types/AgentAccountInfo';
-import {Button} from '../../components/Button';
-import {Spacer} from '../../components/Spacer';
-import {UncrRootReducer} from '../../uncrStore';
+import {Button} from '../Button';
+import {Spacer} from '../Spacer';
+import {useMainRoute} from '../../navigation/MainFeedNavigation';
 import {
-  createAxiosLocalServerInstance,
   createAxiosServerInstance,
   createAxiosYoutubeDataAPIInstance,
   youtubeGeneralAPI,
 } from '../../utils/AxiosUtils';
 import {Color} from '../../utils/ColorStyle';
 import {Font} from '../../utils/FontStyle';
+import {convertSecondsToTimeAssume} from '../../utils/MetricUtils';
 
-const MyStats: React.FC = () => {
+const AgentStat: React.FC = () => {
   const {width, height} = useWindowDimensions();
+  const mainRoutes = useMainRoute<'AgentFeedNavigation'>();
   const [totalDuration, setTotalDuration] = useState(0);
+  const [totalSurfCount, setTotalSurfCount] = useState(0);
+
   const [agentFeedData, setAgentFeedData] = useState([]);
-  const [contentsTabFlag, setContentsTabFlag] = useState(false);
-  const [creatorsTabFlag, setCreatorsTabFlag] = useState(true);
-  const agentInfo = useSelector<UncrRootReducer, AgentAccountInfo | null>(
-    state => {
-      return state.accountInfo.accountInfo;
-    },
-  );
+  const [contentsTabFlag, setContentsTabFlag] = useState(true);
+  const [creatorsTabFlag, setCreatorsTabFlag] = useState(false);
   const onPressContentsTab = () => {
     if (creatorsTabFlag) {
       setCreatorsTabFlag(false);
@@ -46,7 +42,7 @@ const MyStats: React.FC = () => {
   };
   async function getAgentFeeds() {
     const result = await createAxiosServerInstance().get('/mypage/get', {
-      params: {agentID: agentInfo?.agentNumber},
+      params: {agentID: mainRoutes.params.AgentID},
     });
     result.data.boardVOS
       .sort((a: any, b: any) => a.boardID - b.boardID)
@@ -70,6 +66,8 @@ const MyStats: React.FC = () => {
     }
     console.log(result.data.agentTotalDuration);
     setTotalDuration(result.data.agentTotalDuration);
+    setTotalSurfCount(result.data.agentTotalSurfCount);
+
     setAgentFeedData(result.data.boardVOS);
   }
   console.log(agentFeedData);
@@ -77,7 +75,7 @@ const MyStats: React.FC = () => {
     getAgentFeeds();
   }, []);
   return (
-    <View style={{marginTop: 16}}>
+    <View style={{marginTop: 16, flexGrow: 1}}>
       <View
         style={{
           flexDirection: 'row',
@@ -101,7 +99,7 @@ const MyStats: React.FC = () => {
               </Text>
               <Spacer space={6} />
               <Text style={[Font.Title02_22_R, Color.White100]}>
-                {totalDuration} Sec
+                {convertSecondsToTimeAssume(totalDuration)}
               </Text>
             </View>
           </ImageBackground>
@@ -122,7 +120,10 @@ const MyStats: React.FC = () => {
                 generated from feed
               </Text>
               <Spacer space={6} />
-              <Text style={[Font.Title02_22_R, Color.White100]}>Counts</Text>
+              <Text style={[Font.Title02_22_R, Color.White100]}>
+                {' '}
+                {totalSurfCount} inflows
+              </Text>
             </View>
           </ImageBackground>
         </View>
@@ -179,37 +180,43 @@ const MyStats: React.FC = () => {
       </View>
       <Spacer space={16} />
       {contentsTabFlag && (
-        <FlatList
-          data={agentFeedData}
-          numColumns={2}
-          columnWrapperStyle={{justifyContent: 'space-between'}}
-          renderItem={({item}) => {
-            return (
-              <View style={{marginHorizontal: 8}}>
-                <Image
-                  source={{uri: item.videoThumbnail}}
-                  style={{
-                    width: width / 2 - 16,
-                    height: ((width / 2 - 16) * 9) / 16,
-                    borderRadius: 10,
-                  }}
-                />
-                <Spacer space={8} />
+        <View style={{flex: 1}}>
+          <FlatList
+            data={agentFeedData}
+            numColumns={2}
+            columnWrapperStyle={{justifyContent: 'space-between'}}
+            renderItem={({item}) => {
+              return (
+                <View style={{marginHorizontal: 8}}>
+                  <Image
+                    source={{uri: item.videoThumbnail}}
+                    style={{
+                      width: width / 2 - 16,
+                      height: ((width / 2 - 16) * 9) / 16,
+                      borderRadius: 10,
+                    }}
+                  />
+                  <Spacer space={8} />
 
-                <Text style={[Font.Body_14_R, Color.Neutral60]}>
-                  Cumulative view time
-                </Text>
-                <Text style={[Font.Footnote_14_SB, Color.Black100]}>
-                  {item.totalDuration} seconds
-                </Text>
-                <Spacer space={8} />
-                <Text style={[Font.Body_14_R, Color.Neutral60]}>
-                  Cumulative traffic
-                </Text>
-              </View>
-            );
-          }}
-        />
+                  <Text style={[Font.Body_14_R, Color.Neutral60]}>
+                    Generated view time
+                  </Text>
+                  <Text style={[Font.Footnote_14_SB, Color.Black100]}>
+                    {convertSecondsToTimeAssume(item.totalDuration)} seconds
+                  </Text>
+                  <Spacer space={8} />
+                  <Text style={[Font.Body_14_R, Color.Neutral60]}>
+                    Inflow to YouTube
+                  </Text>
+                  <Text style={[Font.Footnote_14_SB, Color.Black100]}>
+                    {item.totalSurfCount} inflows
+                  </Text>
+                  <Spacer space={20} />
+                </View>
+              );
+            }}
+          />
+        </View>
       )}
       {creatorsTabFlag && (
         <View style={{marginHorizontal: 16}}>
@@ -267,4 +274,4 @@ const MyStats: React.FC = () => {
   );
 };
 
-export default MyStats;
+export default AgentStat;

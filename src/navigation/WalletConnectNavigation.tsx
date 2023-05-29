@@ -9,6 +9,7 @@ import NewNamingScreen from '../screens/account/NewNamingScreen';
 import SelectedAccountsScreen from '../screens/AgentFeed/SelectedAccountsScreen';
 import {SignInScreen} from '../screens/account/SignInScreen';
 import {SingupScreen} from '../screens/account/SingupScreen';
+import ChooseAccountsScreen from '../screens/account/ChooseAccountsScreen';
 
 export type TypeWalletConnectNavigation = {
   SignIn: {
@@ -24,8 +25,9 @@ export type TypeWalletConnectNavigation = {
     AgentID: number;
   };
   Selected: {
-    walletAddress: string;
-    AgentIDs: [];
+    walletAddress: string | undefined;
+    AgentInfos: {}[];
+    NewAgentInfos: {}[];
   };
 };
 
@@ -35,9 +37,9 @@ export const WalletConnectNavigation: React.FC = () => {
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
       <Stack.Screen name="SignIn" component={SignInScreen} />
-      <Stack.Screen name="Selected" component={SelectedAccountsScreen} />
       <Stack.Screen name="Mint" component={SingupScreen} />
       <Stack.Screen name="Naming" component={NewNamingScreen} />
+      <Stack.Screen name="Selected" component={ChooseAccountsScreen} />
     </Stack.Navigator>
   );
 };

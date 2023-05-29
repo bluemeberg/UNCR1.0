@@ -1,4 +1,5 @@
 import React from 'react';
+import {TouchableOpacity, View} from 'react-native';
 import {Button} from '../Button';
 import {Icon} from '../Icon';
 
@@ -9,8 +10,10 @@ export const HeaderIcon: React.FC<{
   size?: number | 20;
 }> = props => {
   return (
-    <Button onPress={props.onPress}>
+    <TouchableOpacity
+      onPress={props.onPress}
+      hitSlop={{top: 48, bottom: 48, right: 32, left: 32}}>
       <Icon name={props.name} size={props.size} color={props.color} />
-    </Button>
+    </TouchableOpacity>
   );
 };

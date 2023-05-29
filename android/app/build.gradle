@@ -99,8 +99,8 @@ android {
         applicationId "com.uncr_cbt"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 16
-        versionName "1.058"
+        versionCode 20
+        versionName "1.064"
     }
     
     splits {
@@ -156,6 +156,12 @@ android {
             }
 
         }
+    }
+
+    // Add the following block
+    packagingOptions {
+        exclude 'META-INF/proguard/androidx-annotations.pro'
+        exclude 'META-INF/proguard/androidx-annotationss.pro'
     }
 }
 

@@ -1,13 +1,18 @@
 import axios from 'axios';
 import React from 'react';
-import {Alert, Image, View} from 'react-native';
+import {Alert, Image, TouchableOpacity, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useDispatch} from 'react-redux';
+import {
+  getAccountFeedList,
+  TypeAgentAccountDispatch,
+} from '../actions/agentAccount';
 import {
   getMainFeedList,
   TypeMainFeedListActions,
   TypeMainFeedListDispatch,
 } from '../actions/mainFeed';
+import {getMyFeedList, TypeMyAccountDispatch} from '../actions/myFeed';
 import {useCommentNavigation} from '../navigation/CommentNavigation';
 import {useMainNavigation} from '../navigation/MainFeedNavigation';
 import {useRootNavigation} from '../navigation/RootStackNavigation';
@@ -29,14 +34,18 @@ export const FeedListBottom: React.FC<{
   channelThumnaial: string;
   channelTitle: string;
   boardAgnetID: string;
+  boardTime: string;
+  onPressShare: () => {};
 }> = props => {
   const feedDispatch = useDispatch<TypeMainFeedListDispatch>();
+  const myDispatch = useDispatch<TypeMyAccountDispatch>();
+  const agentDispatch = useDispatch<TypeAgentAccountDispatch>();
   const rootNavigation = useRootNavigation<'CommentScreen'>();
   const commentNavigation = useCommentNavigation<'Comment'>();
   const onPressHeart = async () => {
     if (agentInfo === null) {
       Alert.alert(
-        'Alert',
+        'Guide',
         'Please login',
         [
           {
@@ -53,6 +62,14 @@ export const FeedListBottom: React.FC<{
       console.log(result);
       // await sleep(500);
       feedDispatch(getMainFeedList(agentInfo.agentNumber.toString()));
+      myDispatch(getMyFeedList(agentInfo.agentNumber.toString()));
+      agentDispatch(
+        getAccountFeedList(
+          props.boardAgnetID,
+          agentInfo.agentNumber.toString(),
+        ),
+      );
+      // agentDispatch(getAccountFeedList())
     } else if (agentInfo != null && props.isLiked) {
       const result = await createAxiosServerInstance().delete('/board/unlike', {
         data: {
@@ -63,6 +80,13 @@ export const FeedListBottom: React.FC<{
       console.log(result);
       // await sleep(1000);
       feedDispatch(getMainFeedList(agentInfo.agentNumber.toString()));
+      myDispatch(getMyFeedList(agentInfo.agentNumber.toString()));
+      agentDispatch(
+        getAccountFeedList(
+          props.boardAgnetID,
+          agentInfo.agentNumber.toString(),
+        ),
+      );
     }
   };
   const onPressComment = async () => {
@@ -81,8 +105,10 @@ export const FeedListBottom: React.FC<{
       channelThumbnail: props.channelThumnaial,
       channelTitle: props.channelTitle,
       boardAgentID: props.boardAgnetID,
+      boardTime: props.boardTime,
     });
   };
+
   const agentInfo = useAgentInfo();
   return (
     <View
@@ -93,28 +119,40 @@ export const FeedListBottom: React.FC<{
         justifyContent: 'space-between',
       }}>
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
-        <Button onPress={onPressHeart}>
-          <Icon
-            name={props.isLiked ? 'heart' : 'heart-outline'}
-            size={16}
-            color={props.isLiked ? '#ED0C0C' : 'black'}
-          />
-        </Button>
-        <Spacer horizontal space={5} />
-        <Typography fontSize={14} color="gray">
-          {props.feedLikeNumber.toString()}
-        </Typography>
+        <TouchableOpacity
+          onPress={onPressHeart}
+          hitSlop={{top: 32, bottom: 32, left: 16, right: 16}}>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <Icon
+              name={props.isLiked ? 'heart' : 'heart-outline'}
+              size={16}
+              color={props.isLiked ? '#ED0C0C' : 'black'}
+            />
+            <Spacer horizontal space={5} />
+            <Typography fontSize={14} color="gray">
+              {props.feedLikeNumber.toString()}
+            </Typography>
+          </View>
+        </TouchableOpacity>
         <Spacer horizontal space={15} />
-        <Button onPress={onPressComment}>
-          <Icon name="chatbubble-outline" size={16} color="black" />
-        </Button>
-        <Spacer horizontal space={5} />
-        <Typography fontSize={14} color="gray">
-          {props.feedCommentNumber.toString()}
-        </Typography>
+        <TouchableOpacity
+          onPress={onPressComment}
+          hitSlop={{top: 32, bottom: 32, left: 16, right: 16}}>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <Icon name="chatbubble-outline" size={16} color="black" />
+            <Spacer horizontal space={5} />
+            <Typography fontSize={14} color="gray">
+              {props.feedCommentNumber.toString()}
+            </Typography>
+          </View>
+        </TouchableOpacity>
       </View>
       <View>
-        <Icon name="share-outline" size={18} />
+        <TouchableOpacity
+          onPress={props.onPressShare}
+          hitSlop={{top: 32, bottom: 32, left: 16, right: 16}}>
+          <Icon name="share-outline" size={18} color="black" />
+        </TouchableOpacity>
       </View>
     </View>
   );

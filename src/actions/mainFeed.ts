@@ -71,27 +71,46 @@ export const createAgentAccountFeed =
     videoID: string,
     videoThumbnail: string,
     videoCategory: string,
+    youtubeComment: string | null,
+    youtubeCommentCount: number | null,
+    hashtags: [],
   ): TypeMainFeedListThunkAction =>
   async (dispatch, getState) => {
     dispatch(createAgentAccountFeedReqeust());
     await sleep(200);
     const agentUser = getState().accountInfo.accountInfo;
-
+    try {
+      console.log('youtubeComment', youtubeComment);
+      console.log('youtubeCommentCount', youtubeCommentCount);
+      console.log('check', agentUser?.agentNumber);
+      console.log('check', boardTitle);
+      console.log('check', boardContent);
+      console.log('check', videoID);
+      console.log('check', videoThumbnail);
+      console.log('cehck', videoCategory);
+      console.log('hashTags', hashtags);
+      const result = await createAxiosServerInstance().post('/board/add', {
+        agentID: agentUser?.agentNumber,
+        channelID: channelID,
+        boardTitle: boardTitle,
+        boardContent: boardContent,
+        videoID: videoID,
+        videoThumbnail: videoThumbnail,
+        videoCategory: videoCategory,
+        youtubeComment: youtubeComment,
+        youtubeCommentLikes: youtubeCommentCount,
+        hashtags: hashtags,
+      });
+    } catch (e) {
+      console.error(e);
+    }
     //서버
-    const result = await createAxiosServerInstance().post('/board/add', {
-      agentID: agentUser?.agentNumber,
-      channelID: channelID,
-      boardTitle: boardTitle,
-      boardContent: boardContent,
-      videoID: videoID,
-      videoThumbnail: videoThumbnail,
-      videoCategory: videoCategory,
-    });
     const latestFeed = await createAxiosServerInstance().get('/feed/get', {
       params: {
         agentID: agentUser?.agentNumber,
       },
     });
+
     // // 로컬
     // const result = await createAxiosLocalServerInstance().post('/board/add', {
     //   agentID: agentUser?.agentNumber,

@@ -1,6 +1,12 @@
 import axios from 'axios';
 import React, {useEffect, useState} from 'react';
-import {Image, Text, View} from 'react-native';
+import {
+  Image,
+  Text,
+  TouchableOpacity,
+  useWindowDimensions,
+  View,
+} from 'react-native';
 import {usePostNavigation} from '../navigation/PostNavigation';
 import {
   createAxiosLocalServerInstance,
@@ -14,6 +20,7 @@ import {RemoteImage} from './RemoteImage';
 import {Spacer} from './Spacer';
 import {Typography} from './Typography';
 import {TypeLikedVideoItem} from './type/TypeLikedVideoItem';
+import {formatNumberToMetric} from '../utils/MetricUtils';
 
 const LikedVideoListItem: React.FC<{
   item: TypeLikedVideoItem;
@@ -31,6 +38,10 @@ const LikedVideoListItem: React.FC<{
     });
   };
   const [viewCount, setViewCount] = useState();
+  // console.log(
+  //   props.item.viewCount,
+  //   formatNumberToMetric(Number(props.item.viewCount)),
+  // );
   // useEffect(() => {
   //   async function videoResult() {
   //     try {
@@ -53,27 +64,42 @@ const LikedVideoListItem: React.FC<{
   //   }
   //   videoResult();
   // });
+  const {width, height} = useWindowDimensions();
   return (
-    <View
-      style={{
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}>
-      <Image
-        source={{uri: props.item.thumbnail}}
-        style={{borderRadius: 10, width: 120, height: 67.5}}
-      />
-      <Spacer horizontal space={8} />
-      <View style={{flex: 1.5}}>
-        <Text style={[Font.Body_16_R, {color: 'black'}]}>
-          {props.item.title.slice(0, 30)} ...
-        </Text>
-        <Spacer space={4} />
-        <Text style={Font.Caption01_12_R}>{props.item.channelTitle}</Text>
-        <Text style={Font.Caption01_12_R}>{props.item.viewCount} views</Text>
-      </View>
-      <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+    <TouchableOpacity onPress={onRecommend}>
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'center',
+          width: width - 32,
+          borderRadius: 12,
+        }}>
+        <Image
+          source={{uri: props.item.thumbnail}}
+          style={{borderRadius: 10, width: 120, height: 67.5}}
+        />
+        <Spacer horizontal space={8} />
+        <View style={{flex: 1.5, marginRight: 16}}>
+          <Text
+            style={[
+              Font.Body_14_R,
+              {
+                color:
+                  props.item.lessThan500Comments === 1 ? '#7400DB' : 'black',
+              },
+            ]}>
+            {props.item.title.length > 44
+              ? props.item.title.slice(0, 44) + '...'
+              : props.item.title}
+          </Text>
+          <Spacer space={4} />
+          <Text style={Font.Caption01_12_R}>{props.item.channelTitle}</Text>
+          <Text style={Font.Caption01_12_R}>
+            {formatNumberToMetric(Number(props.item.viewCount))} views
+          </Text>
+        </View>
+        {/* <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
         <Button onPress={onRecommend}>
           <View
             style={[
@@ -87,8 +113,9 @@ const LikedVideoListItem: React.FC<{
             <Text style={Font.Footnote_14_R}>Share</Text>
           </View>
         </Button>
+      </View> */}
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 

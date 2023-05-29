@@ -8,4 +8,5 @@ export type TypeLikedVideoItem = {
   title: string;
   viewCount: string;
   commentCount: string;
+  lessThan500Comments: number;
 };

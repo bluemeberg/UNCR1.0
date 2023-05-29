@@ -32,12 +32,10 @@ import {UncrRootReducer} from '../../uncrStore';
 import {sleep} from '../../utils/sleep';
 
 import {AgentAccountInfo} from '../../@types/AgentAccountInfo';
-import MyPosts from './MyPosts';
-import MyStats from './MyStats';
-
-const FirstRoute = () => <View style={{flex: 1, backgroundColor: 'gray'}} />;
-
-const SecondRoute = () => <View style={{flex: 1, backgroundColor: 'black'}} />;
+import MyPosts from '../../components/MyFeed/MyPosts';
+import MyStats from '../../components/MyFeed/MyStats';
+import {ImageURL} from '../../utils/ImageUtils';
+import {useMyFeedNavigation} from '../../navigation/MyFeedNavigation';
 
 const renderScene = SceneMap({
   first: MyPosts,
@@ -49,6 +47,7 @@ const MyFeedComponentScreen: React.FC = () => {
   const onPressClose = () => {
     rootNavigation.goBack();
   };
+  const navigation = useMyFeedNavigation();
   const mainRoutes = useMainRoute<'AgentFeedNavigation'>();
   const {width, height} = useWindowDimensions();
   const agentFeed = useSelector<UncrRootReducer, MainFeedInfo[]>(
@@ -85,90 +84,114 @@ const MyFeedComponentScreen: React.FC = () => {
         visible={isPopupOpen}
         animationType="fade"
         style={{position: 'relative'}}>
-        <View style={{flex: 1, marginTop: safe.top}}>
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
           <Pressable onPress={() => setIsPopupOpen(false)}>
-            <View
-              style={{
-                opacity: 0.8,
-                width: 50,
-                marginLeft: 16,
-                marginTop: 16,
-              }}>
-              <Icon name="close" size={20} color="black" />
-            </View>
-          </Pressable>
-          <View
-            style={{
-              flex: 1,
-              alignItems: 'center',
-              justifyContent: 'center',
-              marginBottom: safe.bottom + 60,
-            }}>
-            <Image
-              source={{uri: `https://uncr.io/${agentInfo?.agentNumber}.png`}}
-              style={{
-                width: width - 32,
-                height: width - 32,
-                borderRadius: 20,
-              }}
-            />
-          </View>
-        </View>
-      </Modal>
-      <View style={{marginHorizontal: 16, flexDirection: 'row'}}>
-        <TouchableOpacity
-          onPress={() => {
-            setIsPopupOpen(true);
-          }}>
-          <View>
-            <Image
-              source={{uri: `https://uncr.io/${agentInfo?.agentNumber}.png`}}
-              style={{width: 100, height: 100}}
-              borderRadius={10}
-              onLayout={onImageLayout}
-            />
-          </View>
-        </TouchableOpacity>
-        <Spacer horizontal space={10} />
-        <View
-          style={{
-            flexDirection: 'column',
-            justifyContent: 'center',
-          }}>
-          <Text style={[Font.Caption01_14_R, {color: 'gray'}]}>
-            Agent #{agentInfo?.agentNumber}
-          </Text>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <Text style={[Font.Title02_22_R, {color: 'black'}]}>
-              {agentInfo?.agentName}
-            </Text>
-            <Spacer horizontal space={10} />
-            <View
-              style={[
-                {
-                  width: 40,
-                  height: 20,
+            <View style={{flex: 1, marginTop: safe.top}}>
+              <View
+                style={{
+                  flex: 1,
                   alignItems: 'center',
                   justifyContent: 'center',
-                  borderRadius: 5,
-                  backgroundColor: '#7400DB',
-                },
-              ]}>
-              <Text style={[Font.Caption01_12_R, {color: 'white'}]}>Lv. 1</Text>
+                  marginBottom: safe.bottom + 60,
+                }}>
+                <Pressable onPress={() => setIsPopupOpen(false)}>
+                  <Image
+                    source={{uri: ImageURL + `${agentInfo?.agentNumber}.png`}}
+                    style={{
+                      width: width - 32,
+                      height: width - 32,
+                      borderRadius: 20,
+                    }}
+                  />
+                </Pressable>
+              </View>
             </View>
-          </View>
-          <Spacer space={10} />
+          </Pressable>
+        </View>
+      </Modal>
+      <View
+        style={{
+          marginHorizontal: 16,
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+        }}>
+        <View style={{flexDirection: 'row'}}>
+          <TouchableOpacity
+            onPress={() => {
+              setIsPopupOpen(true);
+            }}>
+            <View>
+              <Image
+                source={{uri: ImageURL + `${agentInfo?.agentNumber}.png`}}
+                style={{width: 60, height: 60}}
+                borderRadius={10}
+                onLayout={onImageLayout}
+              />
+            </View>
+          </TouchableOpacity>
+          <Spacer horizontal space={10} />
+          <View
+            style={{
+              flexDirection: 'column',
+              justifyContent: 'center',
+            }}>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Text style={[Font.Caption01_12_R, {color: '#ADADAD'}]}>
+                Agent #{agentInfo?.agentNumber}
+              </Text>
+              <Spacer horizontal space={10} />
+              <View
+                style={[
+                  {
+                    width: 40,
+                    height: 20,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    borderRadius: 5,
+                    backgroundColor: '#7400DB',
+                  },
+                ]}>
+                <Text style={[Font.Caption01_12_R, {color: 'white'}]}>
+                  Lv. 1
+                </Text>
+              </View>
+            </View>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Text style={[Font.Title02_22_R, {color: 'black'}]}>
+                {agentInfo?.agentName}
+              </Text>
+            </View>
+            {/* <Spacer space={10} />
           <View style={{flexDirection: 'row'}}>
             <Text style={{color: 'black'}}>0 Following</Text>
             <Spacer horizontal space={10} />
             <Text style={{color: 'black'}}>0 Follower</Text>
+          </View> */}
           </View>
         </View>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.push('Edit');
+          }}>
+          <View
+            style={{
+              borderWidth: 1,
+              borderColor: '#CCD4DF',
+              borderRadius: 12,
+              alignItems: 'center',
+              justifyContent: 'center',
+              paddingHorizontal: 16,
+              paddingVertical: 8,
+            }}>
+            <Text style={[Font.Caption01_12_R, Color.Black100]}>Edit</Text>
+          </View>
+        </TouchableOpacity>
       </View>
       <Spacer space={16} />
       <View style={{marginHorizontal: 16}}>
         <Text style={{color: 'gray'}}>
-          Hello, im Agent ----, im usually consume work out contents
+          Please descirbe your contents personality.
         </Text>
       </View>
       {/* <Spacer space={20} />
@@ -201,13 +224,13 @@ const MyFeedComponentScreen: React.FC = () => {
             {...props}
             indicatorStyle={{
               backgroundColor: '#7400DB',
-              border: 'none',
             }}
             style={{
               backgroundColor: 'white',
-              fontWeight: 'bold',
               shadowOffset: {height: 0, width: 0},
               shadowColor: 'transparent',
+              borderBottomWidth: 1,
+              borderColor: '#F2F4F9',
             }}
             pressColor={'transparent'}
             renderLabel={({route, focused}) => (

@@ -1,5 +1,5 @@
 export type AgentAccountInfo = {
-  walletAddress: string;
+  walletAddress: string | null;
   agentNumber: number;
-  agentName: string;
+  agentName: string | null;
 };

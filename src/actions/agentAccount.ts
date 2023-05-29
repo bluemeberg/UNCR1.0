@@ -3,7 +3,11 @@ import {ThunkAction, ThunkDispatch} from 'redux-thunk';
 import {AgentAccountInfo} from '../@types/AgentAccountInfo';
 import {MainFeedInfo} from '../@types/MainFeedInfo';
 import {UncrRootReducer} from '../uncrStore';
-import {createAxiosServerInstance} from '../utils/AxiosUtils';
+import {
+  createAxiosServerInstance,
+  createAxiosYoutubeDataAPIInstance,
+  youtubeGeneralAPI,
+} from '../utils/AxiosUtils';
 import {sleep} from '../utils/sleep';
 import {TypeMainFeedListActions} from './mainFeed';
 
@@ -43,16 +47,40 @@ export const getAgentAccountFeedListFailure = () => {
 };
 
 export const getAccountFeedList =
-  (agentId: string): TypeAgentAccountThunkAction =>
+  (agentId: string, myId: string): TypeAgentAccountThunkAction =>
   async dispatch => {
     dispatch(getAgentAccountFeedListRequest());
     await sleep(500);
     try {
-      const result = await createAxiosServerInstance().get('/mypage/get', {
+      const result = await createAxiosServerInstance().get('/agent/get', {
         params: {
           agentID: agentId,
+          myAgentID: myId,
         },
       });
+      result.data.boardVOS
+        .sort((a: any, b: any) => a.boardID - b.boardID)
+        .reverse();
+      // console.log(result.data.boardVOS);
+      for (let i = 0; i < result.data.boardVOS.length; i++) {
+        //   console.log(result.data.boardVOS[i].videoID);
+        const videoResult = await createAxiosYoutubeDataAPIInstance().get(
+          '/videos',
+          {
+            params: {
+              part: 'snippet',
+              key: youtubeGeneralAPI,
+              id: result.data.boardVOS[i].videoID,
+            },
+          },
+        );
+        result.data.boardVOS[i] = Object.assign(result.data.boardVOS[i], {
+          videoThumbnail:
+            videoResult.data.items[0].snippet.thumbnails.medium.url,
+        });
+        //   console.log(a);
+      }
+      console.log('result', result.data.boardVOS);
       dispatch(getAgentAccountFeedListSuccess(result.data));
     } catch (error) {
       console.log(error);

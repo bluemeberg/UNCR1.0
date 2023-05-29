@@ -4,6 +4,7 @@ import {
   Image,
   KeyboardAvoidingView,
   Platform,
+  ScrollView,
   Text,
   TextInput,
   useWindowDimensions,
@@ -36,6 +37,15 @@ import {
   useCommentRoute,
 } from '../navigation/CommentNavigation';
 import {useRootNavigation} from '../navigation/RootStackNavigation';
+import {TouchableOpacity} from 'react-native';
+import {ImageURL} from '../utils/ImageUtils';
+import {timeToMetric} from '../utils/MetricUtils';
+import {Color} from '../utils/ColorStyle';
+import {getMyFeedList, TypeMyAccountDispatch} from '../actions/myFeed';
+import {
+  getAccountFeedList,
+  TypeAgentAccountDispatch,
+} from '../actions/agentAccount';
 
 const CommentScreen: React.FC = () => {
   const navigation = useRootNavigation<'Comment'>();
@@ -46,15 +56,20 @@ const CommentScreen: React.FC = () => {
   const route = useCommentRoute<'Comment'>();
   console.log('comment', route);
   const agnetInfo = useAgentInfo();
+  console.log('agent info', agnetInfo);
   // console.log(route.params);
   const agentFeedDispatch = useDispatch<TypeAgentFeedListDispatch>();
   const onPressAgentFeed = useCallback(async (agentNumber: number) => {
     agentFeedDispatch(getAgentFeedList(agentNumber.toString()));
     await sleep(500);
-    navigation.push('AgentFeed', {AgentID: agentNumber});
+    navigation.push('Agent', {
+      screen: 'AgentFeed',
+      params: {AgentID: agentNumber},
+    });
   }, []);
   const feedDispatch = useDispatch<TypeMainFeedListDispatch>();
-
+  const myDispatch = useDispatch<TypeMyAccountDispatch>();
+  const agentDispatch = useDispatch<TypeAgentAccountDispatch>();
   const onPressAddComment = async () => {
     const result = await createAxiosServerInstance().post('/comment/add', {
       boardID: route.params.boardID,
@@ -63,14 +78,16 @@ const CommentScreen: React.FC = () => {
     });
     // console.log(result);
     getComment();
+    setComment('');
   };
   // 코멘트 받아오기
   const {width, height} = useWindowDimensions();
   const [comment, setComment] = useState<string>('');
-  console.log(comment);
+  // console.log(comment);
   const [commentList, setCommentList] = useState([]);
   const safeAreaInsets = useSafeAreaInsets();
-  async function getComment() {
+
+  const getComment = useCallback(async () => {
     const result = await createAxiosServerInstance().get('/comment/get', {
       params: {
         boardID: route.params.boardID,
@@ -79,49 +96,84 @@ const CommentScreen: React.FC = () => {
     // console.log('comment', result.data);
     result.data.sort((a: any, b: any) => a.commentID - b.commentID).reverse();
     setCommentList(result.data);
-  }
+  }, []);
+
+  // async function getComment() {
+  //   const result = await createAxiosServerInstance().get('/comment/get', {
+  //     params: {
+  //       boardID: route.params.boardID,
+  //     },
+  //   });
+  //   // console.log('comment', result.data);
+  //   result.data.sort((a: any, b: any) => a.commentID - b.commentID).reverse();
+  //   setCommentList(result.data);
+  // }
   const [focused, setFocused] = useState(true);
 
   useEffect(() => {
     getComment();
   }, []);
+
   useEffect(() => {
     return () => {
       feedDispatch(
         getMainFeedList(agnetInfo?.agentNumber.toString() ?? 'null'),
       );
+      myDispatch(getMyFeedList(agnetInfo?.agentNumber.toString()));
+      agentDispatch(
+        getAccountFeedList(route.params.boardAgentID, agnetInfo?.agentNumber),
+      );
     };
   }, []);
+
   return (
-    <View style={{flex: 1, backgroundColor: 'white'}}>
-      <Header>
-        <Header.Icon
-          name="arrow-back"
-          onPress={onPressClose}
-          size={20}
-          color="black"
-        />
-      </Header>
-      <FeedListItemHeader
-        agentURI={`https://uncr.io/${route.params.boardAgentID}.png`}
-        agentNickname={route.params.agentNickName}
-        agentID={Number(route.params.boardAgentID)}
-        channelThumbnail={route.params.channelThumbnail}
-        channelTitle={route.params.channelTitle}
-        onPressAent={() => onPressAgentFeed(Number(route.params.boardAgentID))}
-      />
-      <Spacer space={16} />
-      <View style={{paddingHorizontal: 16}}>
-        <Text style={Font.Body_16_R}>{route.params.boardContent}</Text>
-      </View>
-      <Spacer space={16} />
-      <Divider width={0.5} color="#F2F4F9" />
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={{flex: 1}}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={{flex: 1}}>
+      <View style={{flex: 1, backgroundColor: 'white'}}>
+        <Header>
+          <Header.Icon
+            name="arrow-back"
+            onPress={onPressClose}
+            size={20}
+            color="black"
+          />
+          <View style={{marginRight: 16}}>
+            <Header.Title title="Comment" />
+          </View>
+          <Header.Title title="" />
+        </Header>
+        <View>
+          <FeedListItemHeader
+            agentURI={ImageURL + `${route.params.boardAgentID}.png`}
+            agentNickname={route.params.agentNickName}
+            agentID={Number(route.params.boardAgentID)}
+            channelThumbnail={route.params.channelThumbnail}
+            channelTitle={route.params.channelTitle}
+            onPressAent={() =>
+              onPressAgentFeed(Number(route.params.boardAgentID))
+            }
+            boardTime={route.params.boardTime}
+          />
+          <Spacer space={16} />
+        </View>
         <FlatList
           data={commentList}
+          ListHeaderComponent={() => {
+            return (
+              <>
+                <View style={{paddingHorizontal: 16}}>
+                  <Text style={Font.Body_16_R}>
+                    {route.params.boardContent}
+                  </Text>
+                </View>
+                <Spacer space={16} />
+                <Divider width={0.5} color="#F2F4F9" />
+              </>
+            );
+          }}
           renderItem={({item}) => {
+            const commentTime = timeToMetric(item.commentTime);
             return (
               <View
                 style={{
@@ -130,12 +182,13 @@ const CommentScreen: React.FC = () => {
                   marginHorizontal: 16,
                   alignItems: 'center',
                 }}>
-                <Button onPress={() => onPressAgentFeed(Number(item.agentID))}>
+                <TouchableOpacity
+                  onPress={() => onPressAgentFeed(Number(item.agentID))}>
                   <Image
-                    source={{uri: `https://uncr.io/${item.agentID}.png`}}
+                    source={{uri: ImageURL + `${item.agentID}.png`}}
                     style={{width: 40, height: 40, borderRadius: 10}}
                   />
-                </Button>
+                </TouchableOpacity>
                 <Spacer horizontal space={10} />
                 <View style={{justifyContent: 'center', width: width - 72}}>
                   <View
@@ -147,15 +200,13 @@ const CommentScreen: React.FC = () => {
                       {item.agentNickname}
                     </Text>
                     <Spacer space={4} horizontal />
-                    <Text style={Font.Caption01_12_R}>
+                    <Text style={[Font.Caption01_12_R, Color.Black033]}>
                       Agent #{item.agentID}
                     </Text>
                     <Spacer space={4} horizontal />
-                    <Text style={{fontSize: 10, color: 'gray'}}>·</Text>
-                    <Spacer space={4} horizontal />
-                    <Text
-                      style={{fontSize: 10, color: 'gray', marginRight: 16}}>
-                      {item.commentTime}
+                    <Text style={[Font.Caption01_12_R, Color.Black033]}>·</Text>
+                    <Text style={[Font.Caption01_12_R, Color.Black033]}>
+                      {commentTime}
                     </Text>
                   </View>
                   <Spacer space={8} />
@@ -178,7 +229,7 @@ const CommentScreen: React.FC = () => {
             <>
               <Image
                 source={{
-                  uri: `https://uncr.io/${agnetInfo?.agentNumber}.png`,
+                  uri: ImageURL + `${agnetInfo?.agentNumber}.png`,
                   height: 40,
                   width: 40,
                 }}
@@ -210,15 +261,14 @@ const CommentScreen: React.FC = () => {
                       color: 'black',
                     }}
                     multiline={true}
-                    numberOfLines={4}
                     onFocus={() => setFocused(true)}
                     onBlur={() => setFocused(false)}
                   />
                 </View>
               </View>
-              <Button onPress={onPressAddComment}>
+              <TouchableOpacity onPress={onPressAddComment}>
                 <Icon name="add" size={20} color="black" />
-              </Button>
+              </TouchableOpacity>
             </>
           ) : (
             <>
@@ -242,8 +292,8 @@ const CommentScreen: React.FC = () => {
           )}
         </View>
         <Spacer space={focused ? 8 : safeAreaInsets.bottom + 8} />
-      </KeyboardAvoidingView>
-    </View>
+      </View>
+    </KeyboardAvoidingView>
   );
 };
 

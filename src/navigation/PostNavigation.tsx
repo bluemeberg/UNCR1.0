@@ -10,7 +10,10 @@ import {IntroScreen} from '../screens/post/IntroScreen';
 
 export type TypePostNavigation = {
   GoogleAuth: undefined;
-  FeedWrite: [];
+  FeedWrite: {
+    likeVideos: [];
+    screenName: string;
+  };
   FeedWriteDetailScreen: {
     likeVideoID: string;
     channelTitle: string;

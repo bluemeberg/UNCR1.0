@@ -7,6 +7,7 @@ import {
   Platform,
   StyleSheet,
   Text,
+  TextInput,
   TouchableWithoutFeedback,
   useWindowDimensions,
   View,
@@ -36,11 +37,21 @@ import {
   createAxiosServerInstance,
 } from '../../utils/AxiosUtils';
 import {sleep} from '../../utils/sleep';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {useMyFeedNavigation} from '../../navigation/MyFeedNavigation';
+import {ImageURL} from '../../utils/ImageUtils';
 
 const NewNamingScreen = () => {
   const rootNavigation = useRootNavigation<'Main'>();
   const navigation = useMainNavigation<'MainFeed'>();
+  const myNavigation = useMyFeedNavigation<'MyFeed'>();
+  const walletNavigation = useWalletConnectNavigation();
   const route = useWalletConnectRoute<'Naming'>();
+  // // 초기화
+  // walletNavigation.replace('Naming', {
+  //   walletAddress: route.params.walletAddress,
+  //   AgentID: route.params.AgentID,
+  // });
   const agentDispatch = useDispatch<TypeAgentAccountDispatch>();
   // console.log(route.params.AgentID);
   // console.log(route.params.walletAddress);
@@ -54,9 +65,9 @@ const NewNamingScreen = () => {
     // console.log('true');
     return true;
   }, [inputName]);
-
+  console.log('route', route.params.AgentID);
   const {width} = useWindowDimensions();
-
+  const safeAreaInset = useSafeAreaInsets();
   const onPressSubmit = useCallback(async () => {
     if (!isValid) {
       return;
@@ -66,7 +77,8 @@ const NewNamingScreen = () => {
       const result = await createAxiosServerInstance().post('/agent/add', {
         agentID: route.params?.AgentID ?? 0,
         agentNickname: inputName,
-        agentURI: `https://uncr.io/${route.params.AgentID}.png`,
+        agentURI: ImageURL + `${route.params.AgentID}.png`,
+        agentDescriptions: null,
       });
 
       // // // agent/add 호출 - 로컬
@@ -89,11 +101,9 @@ const NewNamingScreen = () => {
       ),
     );
     await sleep(1000);
-    navigation.navigate('MainFeed', {
-      walletAddress: route.params.walletAddress,
-      AgentID: route.params.AgentID,
-    });
+    myNavigation.navigate('MyFeed');
   }, [isValid, inputName]);
+  const [focused, setFocused] = useState(false);
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -108,23 +118,43 @@ const NewNamingScreen = () => {
         </Header>
         <View style={{marginHorizontal: 24}}>
           <Text style={[Font.Title02_22_R, {color: 'black'}]}>
-            Create your Agent name
+            Create your Agent #{route.params.AgentID}'s name
           </Text>
           <Text style={Font.Fontnote_14_R}>
             Agent name will be used as your username
           </Text>
           <Spacer space={20} />
-          <SingleLineInput
-            value={inputName}
-            onChangeText={setInputName}
-            placeholder="put your name"
-          />
+          <View
+            style={{
+              alignSelf: 'stretch',
+              paddingHorizontal: 12,
+              paddingVertical: 8,
+              borderRadius: 4,
+              borderBottomWidth: 1,
+              borderColor: focused ? 'black' : 'gray',
+            }}>
+            <TextInput
+              // 대문자로 바꿔줌
+              autoCorrect={false}
+              autoCapitalize={'none'}
+              value={inputName}
+              // chage가 발생했을 때
+              onChangeText={setInputName}
+              placeholder="Put your agent name"
+              placeholderTextColor="gray"
+              style={[{fontSize: 20, color: 'black'}]}
+              onFocus={() => setFocused(true)}
+              // focus에서 나왔을 때
+              onBlur={() => setFocused(false)}
+            />
+          </View>
+
           <Spacer space={20} />
         </View>
         <Spacer space={20} />
         <View style={{justifyContent: 'center', alignItems: 'center'}}>
           <Image
-            source={{uri: `https://uncr.io/${route.params.AgentID}.png`}}
+            source={{uri: ImageURL + `${route.params.AgentID}.png`}}
             style={{width: width / 2, height: width / 2, borderRadius: 10}}
           />
         </View>
@@ -150,7 +180,11 @@ const NewNamingScreen = () => {
             </View>
           </Button>
         </View>
-        <Spacer space={40} />
+        {focused ? (
+          <Spacer space={4} />
+        ) : (
+          <Spacer space={Platform.OS === 'ios' ? safeAreaInset.bottom : 12} />
+        )}
       </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
   );

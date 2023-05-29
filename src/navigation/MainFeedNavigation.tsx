@@ -2,6 +2,7 @@ import {
   NavigatorScreenParams,
   RouteProp,
   useNavigation,
+  useNavigationState,
   useRoute,
 } from '@react-navigation/native';
 import {
@@ -21,7 +22,7 @@ import {
   TypeAgentFeedNavigation,
 } from './AgentFeedNavigation';
 
-export type TypeMainFeedNavigation = {
+export type TypeMainFeedNavigationParams = {
   MainFeed: {
     AgentID?: number;
     GuestID?: number;
@@ -41,8 +42,11 @@ export type TypeMainFeedNavigation = {
   // };
 };
 
-const Stack = createNativeStackNavigator<TypeMainFeedNavigation>();
+const Stack = createNativeStackNavigator<TypeMainFeedNavigationParams>();
 const navigation = useBottomTabNavigation();
+// const state = useNavigationState(state => state);
+// const currentScreen = state.routes[state.index].name;
+// console.log('현재 스크린', currentScreen);
 export const MainFeedNavigation: React.FC = () => {
   useEffect(() => {
     const unsubscribe = navigation.addListener('tabPress', e => {
@@ -51,6 +55,7 @@ export const MainFeedNavigation: React.FC = () => {
     });
     return unsubscribe;
   }, [navigation]);
+
   return (
     <Stack.Navigator
       screenOptions={{
@@ -72,10 +77,12 @@ export const MainFeedNavigation: React.FC = () => {
 };
 
 export const useMainNavigation = <
-  RouteName extends keyof TypeMainFeedNavigation,
+  RouteName extends keyof TypeMainFeedNavigationParams,
 >() =>
-  useNavigation<NativeStackNavigationProp<TypeMainFeedNavigation, RouteName>>();
+  useNavigation<
+    NativeStackNavigationProp<TypeMainFeedNavigationParams, RouteName>
+  >();
 
 export const useMainRoute = <
-  RouteName extends keyof TypeMainFeedNavigation,
->() => useRoute<RouteProp<TypeMainFeedNavigation, RouteName>>();
+  RouteName extends keyof TypeMainFeedNavigationParams,
+>() => useRoute<RouteProp<TypeMainFeedNavigationParams, RouteName>>();

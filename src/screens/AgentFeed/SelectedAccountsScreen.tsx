@@ -12,7 +12,10 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {SceneMap, TabBar, TabView} from 'react-native-tab-view';
 import {useDispatch, useSelector} from 'react-redux';
 import {MainFeedInfo} from '../../@types/MainFeedInfo';
-import {getAccountFeedList} from '../../actions/agentAccount';
+import {
+  getAccountFeedList,
+  TypeAgentAccountDispatch,
+} from '../../actions/agentAccount';
 import {
   getAgentFeedList,
   TypeAgentFeedListDispatch,
@@ -30,8 +33,10 @@ import {useMainRoute} from '../../navigation/MainFeedNavigation';
 import {useRootNavigation} from '../../navigation/RootStackNavigation';
 import {UncrRootReducer} from '../../uncrStore';
 import {sleep} from '../../utils/sleep';
-import AgentPosts from './AgentPosts';
-import AgentStat from './AgentStat';
+import AgentPosts from '../../components/AgentFeed/AgentPosts';
+import AgentStat from '../../components/AgentFeed/AgentStat';
+import {ImageURL} from '../../utils/ImageUtils';
+import {useAgentInfo} from '../../selectors/agnetInfo';
 
 const renderScene = SceneMap({
   first: AgentPosts,
@@ -44,12 +49,13 @@ const SelectedAccountsScreen: React.FC = () => {
     rootNavigation.goBack();
   };
   const mainRoutes = useMainRoute<'AgentFeedNavigation'>();
+  console.log(mainRoutes);
   const {width, height} = useWindowDimensions();
   const agentFeed = useSelector<UncrRootReducer, MainFeedInfo[]>(
     state => state.agentFeedList.list,
   );
   const safe = useSafeAreaInsets();
-  // console.log('agentFeed', agentFeed.agentVO.agentNickname);
+  console.log('agentFeed', agentFeed);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [imageDimension, setImageDimensions] = useState({width: 0, height: 0});
   const onImageLayout = (event: {
@@ -62,7 +68,18 @@ const SelectedAccountsScreen: React.FC = () => {
     });
   };
   const safeAreaInset = useSafeAreaInsets();
-
+  const agentFeedDispatch = useDispatch<TypeAgentAccountDispatch>();
+  const agentInfo = useAgentInfo();
+  console.log(agentInfo);
+  useEffect(() => {
+    console.log('useeffect');
+    agentFeedDispatch(
+      getAccountFeedList(
+        mainRoutes.params.AgentID.toString(),
+        agentInfo?.agentNumber.toString(),
+      ),
+    );
+  }, [mainRoutes]);
   const layout = useWindowDimensions();
   const [index, setIndex] = React.useState(0);
   const [routes] = useState([
@@ -75,42 +92,50 @@ const SelectedAccountsScreen: React.FC = () => {
         <Header.Icon
           name="arrow-back"
           onPress={onPressClose}
-          color="black"
           size={20}
+          color="black"
         />
       </Header>
       <Modal
         visible={isPopupOpen}
         animationType="fade"
         style={{position: 'relative'}}>
-        <View style={{flex: 1, marginTop: safe.top}}>
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
           <Pressable onPress={() => setIsPopupOpen(false)}>
-            <View
-              style={{
-                opacity: 0.8,
-                width: 50,
-                marginLeft: 16,
-                marginTop: 16,
-              }}>
-              <Icon name="close" size={20} color="black" />
+            <View style={{flex: 1, marginTop: safe.top}}>
+              {/* <Pressable onPress={() => setIsPopupOpen(false)}>
+                <View
+                  style={{
+                    opacity: 0.8,
+                    width: 50,
+                    marginLeft: 16,
+                    marginTop: 16,
+                  }}>
+                  <Icon name="close" size={20} color="black" />
+                </View>
+              </Pressable> */}
+              <View
+                style={{
+                  flex: 1,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginBottom: safe.bottom + 60,
+                }}>
+                <Pressable onPress={() => setIsPopupOpen(false)}>
+                  <Image
+                    source={{
+                      uri: ImageURL + `${mainRoutes.params.AgentID}.png`,
+                    }}
+                    style={{
+                      width: width - 32,
+                      height: width - 32,
+                      borderRadius: 20,
+                    }}
+                  />
+                </Pressable>
+              </View>
             </View>
           </Pressable>
-          <View
-            style={{
-              flex: 1,
-              alignItems: 'center',
-              justifyContent: 'center',
-              marginBottom: safe.bottom + 60,
-            }}>
-            <Image
-              source={{uri: `https://uncr.io/${mainRoutes.params.AgentID}.png`}}
-              style={{
-                width: width - 32,
-                height: width - 32,
-                borderRadius: 20,
-              }}
-            />
-          </View>
         </View>
       </Modal>
       <View style={{marginHorizontal: 16, flexDirection: 'row'}}>
@@ -120,8 +145,8 @@ const SelectedAccountsScreen: React.FC = () => {
           }}>
           <View>
             <Image
-              source={{uri: `https://uncr.io/${mainRoutes.params.AgentID}.png`}}
-              style={{width: 100, height: 100}}
+              source={{uri: ImageURL + `${mainRoutes.params.AgentID}.png`}}
+              style={{width: 60, height: 60}}
               borderRadius={10}
               onLayout={onImageLayout}
             />
@@ -133,12 +158,9 @@ const SelectedAccountsScreen: React.FC = () => {
             flexDirection: 'column',
             justifyContent: 'center',
           }}>
-          <Text style={[Font.Caption01_14_R, {color: 'gray'}]}>
-            Agent #{agentFeed.agentVO.agentID}
-          </Text>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <Text style={[Font.Title02_22_R, {color: 'black'}]}>
-              {agentFeed.agentVO.agentNickname}
+            <Text style={[Font.Caption01_14_R, {color: 'gray'}]}>
+              Agent #{agentFeed.agentVO.agentID}
             </Text>
             <Spacer horizontal space={10} />
             <View
@@ -155,20 +177,17 @@ const SelectedAccountsScreen: React.FC = () => {
               <Text style={[Font.Caption01_12_R, {color: 'white'}]}>Lv. 1</Text>
             </View>
           </View>
-          <Spacer space={10} />
-          <View style={{flexDirection: 'row'}}>
-            <Text style={{color: 'black'}}>0 Following</Text>
-            <Spacer horizontal space={10} />
-            <Text style={{color: 'black'}}>0 Follower</Text>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <Text style={[Font.Title02_22_R, {color: 'black'}]}>
+              {agentFeed.agentVO.agentNickname}
+            </Text>
           </View>
         </View>
       </View>
       <Spacer space={16} />
-      <View style={{marginHorizontal: 16}}>
-        <Text style={{color: 'gray'}}>
-          Hello, im Agent ----, im usually consume work out contents
-        </Text>
-      </View>
+      {/* <View style={{marginHorizontal: 16}}>
+        <Text style={{color: 'gray'}}>Please introduce your Agent.</Text>
+      </View> */}
       {/* <Spacer space={20} />
       <View style={{flexDirection: 'row', marginHorizontal: 16}}>
         <View style={{flex: 1, alignItems: 'center'}}>
@@ -199,13 +218,13 @@ const SelectedAccountsScreen: React.FC = () => {
             {...props}
             indicatorStyle={{
               backgroundColor: '#7400DB',
-              border: 'gray',
             }}
             style={{
               backgroundColor: 'white',
-              fontWeight: 'bold',
               shadowOffset: {height: 0, width: 0},
               shadowColor: 'transparent',
+              borderBottomWidth: 1,
+              borderColor: '#F2F4F9',
             }}
             pressColor={'transparent'}
             renderLabel={({route, focused}) => (

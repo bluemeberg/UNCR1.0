@@ -2,13 +2,14 @@ import {
   NavigatorScreenParams,
   RouteProp,
   useNavigation,
+  useNavigationState,
   useRoute,
 } from '@react-navigation/native';
 import {
   createNativeStackNavigator,
   NativeStackNavigationProp,
 } from '@react-navigation/native-stack';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {HistoryListScreen} from '../screens/test/HistoryListScreen';
 import {IntroScreen} from '../screens/post/IntroScreen';
 import {WatchingVideoScreen} from '../screens/WatchingVideoScreen';
@@ -22,6 +23,14 @@ import {
 import CommentScreen from '../screens/CommentScreen';
 import {CommentNavigation, TypeCommentNavigation} from './CommentNavigation';
 import SelectedAccountsScreen from '../screens/AgentFeed/SelectedAccountsScreen';
+import {MyFeedNavigation, TypeMyFeedNavigation} from './MyFeedNavigation';
+import {
+  AgentFeedNavigation,
+  TypeAgentFeedNavigation,
+} from './AgentFeedNavigation';
+import {createDrawerNavigator} from '@react-navigation/drawer';
+import {Platform} from 'react-native';
+import AlarmScreen from '../screens/AlarmScreen';
 
 export type TypeRootStackNavigationParams = {
   Intro: undefined;
@@ -42,6 +51,10 @@ export type TypeRootStackNavigationParams = {
     channelThumnail: string;
     channelTitle: string;
     boardAgnetID: string;
+    index: number;
+    hashtags: [];
+    youtubeComment: string;
+    youtubeCommentLikes: string;
   };
   WalletConnect: NavigatorScreenParams<TypeWalletConnectNavigation>;
   Comment: NavigatorScreenParams<TypeCommentNavigation>;
@@ -52,16 +65,26 @@ export type TypeRootStackNavigationParams = {
     channelThumbnail: string;
     channelTitle: string;
     boardAgentID: string;
+    boardTime: string;
   };
   AgentFeed: {
     AgentID: number;
   };
+  My: NavigatorScreenParams<TypeMyFeedNavigation>;
+  Agent: NavigatorScreenParams<TypeAgentFeedNavigation>;
+  Alarm: undefined;
 };
 
 const Stack = createNativeStackNavigator<TypeRootStackNavigationParams>();
-
+// const Drawer = createDrawerNavigator();
+// useEffect(() => {
+//   const state = useNavigationState(state => state);
+//   const currentScreen = state.routes[state.index].name;
+//   console.log(currentScreen);
+// }, []);
 // PostNavigation 필요
 // BottomTabNavigation의 post stack 에서
+const animationSetup = Platform.OS === 'android' ? 'none' : 'default';
 export const RootStackNavigation = () => {
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
@@ -71,8 +94,15 @@ export const RootStackNavigation = () => {
       <Stack.Screen name="WatchingVideo" component={WatchingVideoScreen} />
       <Stack.Screen name="WalletConnect" component={WalletConnectNavigation} />
       <Stack.Screen name="Comment" component={CommentNavigation} />
-      <Stack.Screen name="CommentScreen" component={CommentScreen} />
+      <Stack.Screen
+        options={{animation: animationSetup}}
+        name="CommentScreen"
+        component={CommentScreen}
+      />
       <Stack.Screen name="AgentFeed" component={SelectedAccountsScreen} />
+      <Stack.Screen name="My" component={MyFeedNavigation} />
+      <Stack.Screen name="Agent" component={AgentFeedNavigation} />
+      <Stack.Screen name="Alarm" component={AlarmScreen} />
     </Stack.Navigator>
   );
 };

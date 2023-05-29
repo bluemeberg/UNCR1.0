@@ -3,11 +3,19 @@ import WalletConnectProvider from '@walletconnect/web3-provider';
 
 import axios from 'axios';
 import {ethers} from 'ethers';
-import React, {useCallback, useEffect} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
+  ActivityIndicator,
+  Alert,
+  AppState,
+  Image,
   ImageBackground,
   KeyboardAvoidingView,
+  Linking,
   Platform,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
   View,
 } from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -31,6 +39,8 @@ import {
 import Contract from '../../UNCRAgent.json';
 import {UncrRootReducer} from '../../uncrStore';
 import {createAxiosLocalServerInstance} from '../../utils/AxiosUtils';
+import {Color} from '../../utils/ColorStyle';
+import {Font} from '../../utils/FontStyle';
 import {sleep} from '../../utils/sleep';
 export const SignInScreen = () => {
   const rootNavigation = useRootNavigation();
@@ -38,13 +48,16 @@ export const SignInScreen = () => {
   const onPressClose = useCallback(() => {
     rootNavigation.goBack();
   }, []);
-  const navigation = useWalletConnectNavigation();
+  const navigation = useWalletConnectNavigation<'SignIn'>();
   const guestNavigation = useMainNavigation<'MainFeed'>();
   const route = useWalletConnectRoute();
-
+  const [NewAgentIDs, setNewAgentIDs] = useState([]);
   //Agent 계정 생성
-  const onPressCreateAccount = useCallback(() => {
-    navigation.push('Mint', {walletAddress: route.params.walletAddress});
+  const onPressCreateAccount = useCallback(async () => {
+    await Linking.openURL(
+      'https://metamask.app.link/dapp/main--deluxe-moonbeam-cb4221.netlify.app/',
+    );
+    // navigation.push('Mint', {walletAddress: route.params.walletAddress});
   }, []);
   const guestDispatch = useDispatch<TypeGuestDispatch>();
 
@@ -66,55 +79,131 @@ export const SignInScreen = () => {
     },
   );
   const safeArea = useSafeAreaInsets();
-  useEffect(() => {
-    // if (agentInfo !== null) {
-    //   navigation.goBack();
-    //   return;
-    // }
-    async function fetch() {
-      const wsProvider = new ethers.providers.WebSocketProvider(
-        'wss://goerli.infura.io/ws/v3/3ebf9ab81238402fb50d3dba748fd948',
-        'goerli',
-      );
-      const signer = wsProvider.getSigner(route.params.walletAddress);
 
+  const [appState, setAppState] = useState(AppState.currentState);
+  async function fetch() {
+    const wsProvider = new ethers.providers.WebSocketProvider(
+      'wss://goerli.infura.io/ws/v3/3ebf9ab81238402fb50d3dba748fd948',
+      'goerli',
+    );
+    const signer = wsProvider.getSigner(route.params.walletAddress);
+    const contract = new ethers.Contract(
+      '0x5BF471e55474fe1bcc0ACE26f65FB13278156b32',
+      Contract.abi,
+      signer,
+    );
+    const result1 = await contract.name();
+    console.log('result1', result1);
+    const AgentNumber = await contract.balanceOf(route.params.walletAddress);
+    console.log('number', AgentNumber);
+    let AgentIDs: any = [];
+    if (AgentNumber > 0) {
+      console.log('hi Agent');
+      for (let i = 0; i < AgentNumber; i++) {
+        const AgentID = await contract.tokenOfOwnerByIndex(
+          route.params.walletAddress,
+          i,
+        );
+        AgentIDs.push(AgentID.toString());
+      }
+      console.log;
+      console.log('NewAgentIDs', NewAgentIDs.length);
+      console.log('minted', AgentIDs.length);
+      if (AgentIDs.length > NewAgentIDs.length) {
+        setNewAgentIDs(AgentIDs);
+        console.log('new mint');
+      }
+      // navigation.push('Selected', {
+      //   walletAddress: route.params.walletAddress,
+      //   AgentIDs: AgentIDs,
+      // });
+    } else {
+      console.log('please buy new account');
+    }
+  }
+  console.log('mint', NewAgentIDs.length);
+  const handleAppStateChange = async newAppState => {
+    setAppState(newAppState);
+    console.log('App state changed:', newAppState);
+    if (newAppState === 'active') {
+      console.log('mint complete?');
+      setFlag(true);
+      // contact websocket 연결을 통해 mint balance 가져오기
+      // 이전 보다 +1 되어있으면
+      const doConnect = await connector.connect();
+      console.log(doConnect.accounts[0]);
+      const wsProvider = new ethers.providers.WebSocketProvider(
+        'wss://sepolia.infura.io/ws/v3/3ebf9ab81238402fb50d3dba748fd948',
+        'sepolia',
+      );
+      const signer = wsProvider.getSigner(doConnect.accounts[0]);
       const contract = new ethers.Contract(
-        '0x5BF471e55474fe1bcc0ACE26f65FB13278156b32',
+        '0xee001aC0A6Ac57ddB6442dEf4aA6CE9f92D05869',
         Contract.abi,
         signer,
       );
       const result1 = await contract.name();
-      console.log('result1', result1);
-      const AgentNumber = await contract.balanceOf(route.params.walletAddress);
-      console.log('number', AgentNumber);
-      let AgentIDs = [];
+      const AgentNumber = await contract.balanceOf(doConnect.accounts[0]);
+      // let AgentNumber = await contract.balanceOf(
+      //   '0xb72Cc1b4B2299fE3dbD08B3fd9af509Be3BeA576',
+      // );
+
       if (AgentNumber > 0) {
-        console.log('hi Agent');
-        for (let i = 0; i < AgentNumber; i++) {
-          const AgentID = await contract.tokenOfOwnerByIndex(
-            route.params.walletAddress,
-            i,
-          );
-          AgentIDs.push(AgentID.toString());
-        }
-        console.log(AgentIDs);
-        // navigation.push('Selected', {
-        //   walletAddress: route.params.walletAddress,
-        //   AgentIDs: AgentIDs,
-        // });
+        const AgentID = await contract.tokenOfOwnerByIndex(
+          doConnect.accounts[0],
+          AgentNumber - 1,
+        );
+        console.log('id', AgentID);
+        console.log(Number(AgentID.toString()));
+        navigation.push('Naming', {
+          walletAddress: doConnect.accounts[0],
+          AgentID: Number(AgentID.toString()),
+        });
       } else {
-        console.log('please buy new account');
+        Alert.alert(
+          '',
+          'Please create account again',
+          [
+            {
+              text: 'Okay',
+              onPress: () => {
+                return;
+              },
+            },
+          ],
+          {cancelable: false},
+        );
       }
+      console.log('number', AgentNumber);
     }
-    sleep(10000);
-    fetch();
-  }, [route.params.walletAddress]);
+    setFlag(false);
+  };
+  useEffect(() => {
+    // Add the event listener for app state changes
+    const listener = AppState.addEventListener('change', handleAppStateChange);
+    // Remove the event listener on unmount
+    return () => {
+      listener.remove();
+    };
+  }, []);
+  // useEffect(() => {
+  //   // if (agentInfo !== null) {
+  //   //   navigation.goBack();
+  //   //   return;
+  //   // }
+
+  //   sleep(10000);
+  //   fetch();
+  // }, [route.params.walletAddress]);
+  const {width, height} = useWindowDimensions();
+  const [flag, setFlag] = useState<boolean>(false);
+
   return (
     <KeyboardAvoidingView
       style={{flex: 1}}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <ImageBackground
-        source={require('../../assests/singInBG1.png')}
+        source={require('../../assests/MintBG.png')}
         style={{width: '100%', height: '100%'}}>
         <Header>
           <Header.Icon
@@ -122,19 +211,80 @@ export const SignInScreen = () => {
             onPress={onPressClose}
             size={20}
             color="white"></Header.Icon>
+          {connector.accounts[0] != undefined ? (
+            <View style={{alignItems: 'center'}}>
+              <Text style={{fontSize: 16, color: 'white'}}>
+                {connector.accounts[0].slice(0, 10) + '...'}
+              </Text>
+            </View>
+          ) : (
+            <></>
+          )}
         </Header>
+        {flag && (
+          <View
+            style={[
+              StyleSheet.absoluteFill,
+              {
+                backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                zIndex: 1,
+                display: 'flex',
+              },
+            ]}>
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <ActivityIndicator size="large" color="white" />
+              <Spacer space={4} />
+              <Text
+                style={{
+                  fontSize: 16,
+                  color: 'white',
+                }}>
+                Loading data from the blockchain.
+              </Text>
+            </View>
+          </View>
+        )}
         <Spacer space={12} />
         <View style={{flex: 1, marginHorizontal: 16}}>
-          <Typography color="white" fontSize={22}>
-            Welcome to UNCR
-          </Typography>
+          <Text style={[Font.Title02_22_R, Color.White100]}>
+            Welcome to UNCR,
+          </Text>
           <Spacer space={10} />
-          <Typography fontSize={16} color="gray">
-            In order to use our app,
-          </Typography>
-          <Typography fontSize={16} color="gray">
-            please choose a way to Login
-          </Typography>
+          <Text style={[Font.Body_16_R, Color.White075]}>
+            This is your first time here.
+          </Text>
+          <Text style={[Font.Body_16_R, Color.White075]}>
+            Please go to UNCR Account Center
+          </Text>
+          <Text style={[Font.Body_16_R, Color.White075]}>
+            to create an account.
+          </Text>
+        </View>
+        <View style={{justifyContent: 'center', alignItems: 'center'}}>
+          {Platform.OS === 'ios' ? (
+            <Image
+              source={require('../../assests/AgentNPC.png')}
+              style={{
+                width: width / 2.5,
+                height: (width / 2.5) * (362 / 131),
+                marginBottom: 28,
+              }}
+            />
+          ) : (
+            <Image
+              source={require('../../assests/AgentNPC.png')}
+              style={{
+                width: width / 3,
+                height: (width / 3) * (362 / 131),
+                marginBottom: 28,
+              }}
+            />
+          )}
         </View>
         <View style={{marginHorizontal: 16}}></View>
         <Button onPress={onPressCreateAccount}>
@@ -153,7 +303,7 @@ export const SignInScreen = () => {
           </View>
         </Button>
         <Spacer space={10} />
-        <Button onPress={onPressGuestMode}>
+        {/* <Button onPress={onPressGuestMode}>
           <View
             style={{
               marginHorizontal: 16,
@@ -165,7 +315,7 @@ export const SignInScreen = () => {
             }}>
             <Typography fontSize={14}>Continue as guest</Typography>
           </View>
-        </Button>
+        </Button> */}
         <Spacer space={safeArea.bottom + 12} />
       </ImageBackground>
     </KeyboardAvoidingView>

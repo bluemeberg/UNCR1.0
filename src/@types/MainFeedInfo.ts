@@ -36,5 +36,8 @@ export type MainFeedInfo = {
   boardTime: string;
   boardTitle: string;
   videoThumbnail: string | null;
+  youtubeComment: string | null;
+  youtubeCommentLikes: number | null;
+  hashtags: [];
   index: number;
 };

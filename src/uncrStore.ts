@@ -18,6 +18,7 @@ import {
   agentFeedListReducer,
   TypeAgentFeedReducer,
 } from './reducers/agentFeedList';
+import {myFeedReducer, TypeMyFeedReducer} from './reducers/myFeedList';
 
 const rootReducer = combineReducers({
   accountInfo: accountInfoReducer,
@@ -25,6 +26,7 @@ const rootReducer = combineReducers({
   guestInfo: guestInfoReducer,
   googleUser: googleUserReducer,
   agentFeedList: agentFeedListReducer,
+  myFeedList: myFeedReducer,
 });
 
 export const uncrStore = createStore(
@@ -38,4 +40,5 @@ export type UncrRootReducer = {
   guestInfo: TypeGuestAccountReducer;
   googleUser: TypeGoogleUserReducer;
   agentFeedList: TypeAgentFeedReducer;
+  myFeedList: TypeMyFeedReducer;
 };

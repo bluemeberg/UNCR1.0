@@ -14,6 +14,7 @@ export type TypeCommentNavigation = {
     channelThumbnail: string;
     channelTitle: string;
     boardAgentID: string;
+    boardTime: string;
   };
   AgentFeed: {
     AgentID: number;

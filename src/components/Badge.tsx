@@ -12,21 +12,22 @@ export const Badge: React.FC<{
       <View
         style={[
           {
-            width: 16,
-            height: 16,
-            borderRadius: 8,
-            backgroundColor: 'red',
+            width: 12,
+            height: 12,
+            borderRadius: 4,
+            backgroundColor: 'white',
             alignItems: 'center',
             justifyContent: 'center',
+            borderWidth: 0.5,
           },
           {
             position: 'absolute',
-            right: -5,
-            top: -5,
+            right: -12,
+            top: -12,
           },
         ]}>
         {props.count && (
-          <Typography fontSize={10} color="white">
+          <Typography fontSize={8} color="black">
             {props.count.toString()}
           </Typography>
         )}

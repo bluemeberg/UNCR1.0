@@ -4,7 +4,7 @@ import {
   NativeStackNavigationProp,
 } from '@react-navigation/native-stack';
 import React from 'react';
-import AgentFeedDetail from '../screens/AgentFeed/AgentFeedDetail';
+import AgentFeedDetail from '../screens/AgentFeed/AgentFeedDetailScreen';
 import SelectedAccountsScreen from '../screens/AgentFeed/SelectedAccountsScreen';
 
 export type TypeAgentFeedNavigation = {

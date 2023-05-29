@@ -10,10 +10,15 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {
   Alert,
+  AppState,
   FlatList,
   Image,
   Linking,
   Platform,
+  Pressable,
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
@@ -72,6 +77,8 @@ import {
   useBottomTabNavigation,
   useBottomTabRoute,
 } from '../navigation/BottomTabNavigation';
+import EventEmitter from 'events';
+import {TypeMyAccountDispatch} from '../actions/myFeed';
 
 const sdk = new MetaMaskSDK({
   openDeeplink: link => {
@@ -89,6 +96,8 @@ const ethereum = sdk.getProvider();
 const provider = new ethers.providers.Web3Provider(ethereum);
 
 export const MainScreen: React.FC = ({}) => {
+  const isFoucsed = useIsFocused();
+  console.log('focued main', isFoucsed);
   const connector = useWalletConnect();
   // const navigation = useMainNavigation<'MainFeed'>();
   const rootNavigation = useRootNavigation<'Main'>();
@@ -225,20 +234,22 @@ export const MainScreen: React.FC = ({}) => {
 
   const agentDispatch = useDispatch<TypeAgentAccountDispatch>();
   const feedDispatch = useDispatch<TypeMainFeedListDispatch>();
+  const myPageDispatch = useDispatch<TypeMyAccountDispatch>();
   const feedList = useSelector<UncrRootReducer, MainFeedInfo[]>(
     state => state.mainFeedList.list,
   );
 
-  const onPressLogout = async () => {
-    await connector.killSession();
-    agentDispatch(connectAgentAccount(null, 0, null));
-    await sleep(1000);
-    await AsyncStorage.removeItem('agentInfo');
-    setAgentID(0);
-    setIsLoginedOpen(false);
-    feedDispatch(getMainFeedList('null'));
-  };
+  // const onPressLogout = async () => {
+  //   await connector.killSession();
+  //   agentDispatch(connectAgentAccount(null, 0, null));
+  //   await sleep(1000);
+  //   await AsyncStorage.removeItem('agentInfo');
+  //   setAgentID(0);
+  //   setIsLoginedOpen(false);
+  //   feedDispatch(getMainFeedList('null'));
+  // };
 
+  // 로그인 됐을 때 function
   async function getLoginedAgnetID() {
     const result = await AsyncStorage.getItem('agentInfo');
     if (result != null) {
@@ -253,7 +264,8 @@ export const MainScreen: React.FC = ({}) => {
         ),
       );
       feedDispatch(getMainFeedList(data[1].agentNumber.toString()));
-      agentDispatch(getAccountFeedList(data[1].agentNumber.toString()));
+      // 나의 페이지 불러오기
+      agentDispatch(getMainFeedList(data[1].agentNumber.toString()));
       return result;
     } else {
       feedDispatch(getMainFeedList('null'));
@@ -264,8 +276,30 @@ export const MainScreen: React.FC = ({}) => {
     getLoginedAgnetID();
   }, []);
 
+  // 앱을 다시 스타트했을 때 이전 화면으로 이동시키는 effect 필요
+  // useEffect(() => {
+  //   rootNavigation.push('WatchingVideo', {
+  //     boardID: 20,
+  //     videoId: 'xcv',
+  //     myDuration: 234,
+  //     totalDuration: 23,
+  //     totalWatchers: 23,
+  //     totalComments: 23,
+  //     totalLikes: 23,
+  //     isLiked: true,
+  //     boardContent: '"sdf',
+  //     boardTime: 'sdf',
+  //     agentNickName: 'sdf',
+  //     channelThumnail: 'sdfas',
+  //     channelTitle: 'sdf',
+  //     boardAgnetID: '23',
+  //     index: 4,
+  //   });
+  // }, []);
+
   // agent 계정 로그인 여부 확인
   console.log('login status main screen', agentInfo);
+
   useEffect(() => {
     if (agentInfo !== null) {
       console.log('agent login');
@@ -290,6 +324,7 @@ export const MainScreen: React.FC = ({}) => {
     console.log('hi4');
     console.log(route.params?.GuestID);
   }, [route.params?.GuestID]);
+
   const flatlistRef = useRef<FlatList>(null);
 
   const focused = useIsFocused();
@@ -308,16 +343,24 @@ export const MainScreen: React.FC = ({}) => {
     setTabPressCount(0);
     console.log(tabPressCount);
   }, [focused]);
+  console.log('hi', routes);
 
   useEffect(() => {
+    // flatlistRef.current?.scrollToOffset({animated: true, offset: 0});
     setTabPressCount(prev => prev + 1);
-    setTimeout(() => {
-      if (tabPressCount > 0) {
-        if (flatlistRef.current) {
-          flatlistRef.current?.scrollToIndex({index: 0});
-        }
-      }
-    }, 500);
+    if (tabPressCount > 0) {
+      flatlistRef.current?.scrollToOffset({animated: true, offset: 0});
+      // if (flatlistRef.current) {
+      //   flatlistRef.current?.scrollToIndex({index: 0});
+      // }
+    }
+    // setTimeout(() => {
+    //   if (tabPressCount > 0) {
+    //     if (flatlistRef.current) {
+    //       flatlistRef.current?.scrollToOffset({animated: true, offset: 0});
+    //     }
+    //   }
+    // }, 10);
   }, [routes]);
 
   // useScrollToTop(flatlistRef);
@@ -326,7 +369,75 @@ export const MainScreen: React.FC = ({}) => {
   };
 
   const safeArea = useSafeAreaInsets();
+  const [refreshing, setRefreshing] = useState(false);
 
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    console.log('agent info', agentInfo);
+    try {
+      let loginInfo = await AsyncStorage.getItem('agentInfo');
+      loginInfo = JSON.parse(loginInfo);
+      console.log('login info', loginInfo[1].agentNumber);
+      if (loginInfo === null) {
+        feedDispatch(getMainFeedList('null'));
+      } else if (loginInfo != null) {
+        feedDispatch(getMainFeedList(loginInfo[1].agentNumber));
+      }
+    } catch (e) {
+      console.log(e);
+      feedDispatch(getMainFeedList('null'));
+    }
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 1000);
+  }, []);
+  const [appState, setAppState] = useState(AppState.currentState);
+  const handleAppStateChange = async newAppState => {
+    setAppState(newAppState);
+    console.log('App state changed:', newAppState);
+    if (newAppState === 'active') {
+    } else if (newAppState === 'inactive') {
+      await AsyncStorage.removeItem('initial');
+    } else if (newAppState === 'background') {
+      await AsyncStorage.setItem('initial', '0');
+    }
+  };
+  useEffect(() => {
+    Linking.getInitialURL() // 최초 실행 시에 Universal link 또는 URL scheme요청이 있었을 때 여기서 찾을 수 있음
+      .then(value => {
+        // Alert.alert('getInitialURL', value);
+        const regex = /\/(\d+)$/;
+        const match = value.match(regex);
+        if (match) {
+          const number = parseInt(match[1], 10);
+          console.log(number);
+          setTimeout(() => {
+            flatlistRef.current?.scrollToIndex({index: number});
+          }, 100);
+        }
+        const route = value.replace(/.*?:\/\//g, '');
+        console.log('deep link', route);
+      });
+    Linking.addEventListener('url', e => {
+      // 앱이 실행되어있는 상태에서 요청이 왔을 때 처리하는 이벤트 등록
+      const regex = /\/(\d+)$/;
+      const match = e.url.match(regex);
+      if (match) {
+        const number = parseInt(match[1], 10);
+        console.log(number);
+        setTimeout(() => {
+          flatlistRef.current?.scrollToIndex({index: number});
+        }, 100);
+      }
+      const route = e.url.replace(/.*?:\/\//g, '');
+      console.log('deep link external', route);
+    });
+    const listener = AppState.addEventListener('change', handleAppStateChange);
+    // Remove the event listener on unmount
+    return () => {
+      listener.remove();
+    };
+  }, []);
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
       <Header>
@@ -358,12 +469,25 @@ export const MainScreen: React.FC = ({}) => {
         )} */}
         <Header.Icon
           name="notifications-outline"
-          onPress={() => {}}
+          onPress={() => {
+            rootNavigation.push('Alarm');
+          }}
           size={20}
+          color="black"
         />
       </Header>
+      {isFoucsed === false ? (
+        <Pressable
+          style={[
+            StyleSheet.absoluteFill,
+            {backgroundColor: 'rgba(0, 0, 0, 0.3)', zIndex: 1},
+          ]}
+        />
+      ) : (
+        <></>
+      )}
 
-      {isLoginedOpen && (
+      {/* {isLoginedOpen && (
         <View
           style={[
             {
@@ -399,25 +523,103 @@ export const MainScreen: React.FC = ({}) => {
             </Text>
           </Button>
         </View>
-      )}
+      )} */}
       <View
         style={{
           flexDirection: 'row',
-          height: 40,
-          backgroundColor: 'gray',
-          justifyContent: 'center',
           alignItems: 'center',
+          paddingHorizontal: 16,
         }}>
-        <Typography fontSize={14}>Filter zone</Typography>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          <View
+            style={{borderWidth: 1, borderColor: '#DDDDDD', borderRadius: 4}}>
+            <Image
+              style={{width: 16, height: 16, margin: 6}}
+              source={require('../assests/NationFitlerBF.png')}
+            />
+          </View>
+          <Spacer horizontal space={12} />
+          <View
+            style={{
+              borderWidth: 1,
+              borderColor: '#DDDDDD',
+              borderRadius: 4,
+              backgroundColor: '#7400DB',
+            }}>
+            <Text
+              style={[
+                Font.Body_14_R,
+                Color.White100,
+                {marginHorizontal: 12, marginVertical: 5},
+              ]}>
+              All
+            </Text>
+          </View>
+          <Spacer horizontal space={8} />
+          <View
+            style={{borderWidth: 1, borderColor: '#DDDDDD', borderRadius: 4}}>
+            <Text
+              style={[
+                Font.Body_14_R,
+                Color.Black100,
+                {marginHorizontal: 12, marginVertical: 5},
+              ]}>
+              Daily Trend
+            </Text>
+          </View>
+          <Spacer horizontal space={8} />
+          <View
+            style={{borderWidth: 1, borderColor: '#DDDDDD', borderRadius: 4}}>
+            <Text
+              style={[
+                Font.Body_14_R,
+                Color.Black100,
+                {marginHorizontal: 12, marginVertical: 5},
+              ]}>
+              Weekly Trend
+            </Text>
+          </View>
+          <Spacer horizontal space={8} />
+          <View
+            style={{borderWidth: 1, borderColor: '#DDDDDD', borderRadius: 4}}>
+            <Text
+              style={[
+                Font.Body_14_R,
+                Color.Black100,
+                {marginHorizontal: 12, marginVertical: 5},
+              ]}>
+              Montly Trend
+            </Text>
+          </View>
+        </ScrollView>
       </View>
       <Spacer space={10} />
+
       <FlatList
         data={feedList}
+        // data={data.items}
         ref={flatlistRef}
         // onContentSizeChange={() =>
         //   flatlistRef.current?.scrollToOffset({offset: 0})
         // }
         keyExtractor={item => item.boardID.toString()}
+        refreshControl={
+          <RefreshControl
+            tintColor="black"
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+          />
+        }
+        onScrollToIndexFailed={info => {
+          // console.warn(
+          //   `Failed to scroll to index ${info.index} from ${info.averageItemLength}`,
+          // );
+          const offset = info.averageItemLength * info.index;
+          flatlistRef.current?.scrollToOffset({offset});
+          setTimeout(() => {
+            flatlistRef.current?.scrollToIndex({index: info.index});
+          }, 100);
+        }}
         renderItem={({item, index}) => {
           return (
             <FeedListItem
@@ -439,6 +641,9 @@ export const MainScreen: React.FC = ({}) => {
               boardTime={item.boardTime}
               boardTitle={item.boardTitle}
               videoThumbnail={item.videoThumbnail}
+              youtubeComment={item.youtubeComment}
+              youtubeCommentLikes={item.youtubeCommentLikes}
+              hashtags={item.hashtags}
               index={index}
             />
           );

@@ -26,7 +26,7 @@ export const mainFeedListReducer = (
       };
     case CREATE_AGENT_ACCOUNT_FEED_SUCCESS:
       state.list.unshift(action.item);
-      console.log(state.list);
+      // console.log(state.list);
       return {
         ...state,
         // list: state.list.concat([action.item]),

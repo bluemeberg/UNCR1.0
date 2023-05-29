@@ -13,7 +13,7 @@ const RecommendHashtag: React.FC = () => {
         <Button onPress={onPressHashtag}>
           <View
             style={{
-              backgroundColor: '#D9D9D9',
+              backgroundColor: 'rgba(0,0,0,0.05)',
               borderRadius: 10,
               paddingHorizontal: 20,
               paddingVertical: 10,
